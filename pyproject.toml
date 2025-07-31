@@ -1,0 +1,101 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "MAX17048-smbus"
+version = "0.1.0"
+description = "MAX17048/49 battery fuel gauge driver using SMBus"
+readme = "README.md"
+requires-python = ">=3.8,<4"
+license = { text = "MIT" }
+keywords = [
+  "MAX17048",
+  "MAX17049",
+  "battery",
+  "fuel gauge",
+  "smbus",
+  "raspberry",
+  "raspberry pi",
+  "raspberrypi",
+  "i2c",
+  "battery monitor",
+]
+authors = [
+  { name = "Tuxt", email = "tuxt@protonmail.com" }
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Embedded Systems",
+  "Topic :: System :: Hardware"
+]
+dependencies = [
+]
+
+[project.urls]
+Homepage = "https://github.com/Tuxt/MAX17048-smbus"
+Repository = "https://github.com/Tuxt/MAX17048-smbus"
+Issues = "https://github.com/Tuxt/MAX17048-smbus/issues"
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.12.7"
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py38"
+src = ["max1704x_smbus"]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle: code styling PEP8
+    "E",
+    # Pyflakes: simple errors
+    "F",
+    # pyupgrade: modern python code
+    "UP",
+    # flake8-annotations: typing annotations
+    "ANN",
+    # flake8-bugbear: errors and performance problems
+    "B",
+    # flake8-simplify: code simplification
+    "SIM",
+    # flake8-comprehensions: comprehensions suggestions instead of for-loops
+    "C4",
+    # flake8-eradicate: death code
+    "ERA",
+    # flake8-bandit: security issues
+    "S",
+    # flake8-return: return best practices
+    "RET",
+    # flake8-debugger: detecting debugger statements
+    "T10",
+    # isort: imports sorting
+    "I",
+    # Docstrings: documentation
+    "D",
+    # pep8-naming: naming conventions
+    "N",
+    # Ruff specific checks
+    "RUF",
+]
+ignore = [
+    "D203",     # Conflict with D211
+    "D212",     # Conflict with D213
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+

@@ -46,6 +46,9 @@ Issues = "https://github.com/Tuxt/MAX17048-smbus/issues"
 dev = [
   "ruff>=0.12.7"
 ]
+smbus = ["smbus"]
+smbus2 = ["smbus2"]
+smbus3 = ["smbus3"]
 
 [tool.ruff]
 line-length = 120

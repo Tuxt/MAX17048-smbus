@@ -81,3 +81,7 @@ voltage = device.voltage      # V
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+> This library was inspired by [Adafruit_CircuitPython_MAX1704x](https://github.com/adafruit/Adafruit_CircuitPython_MAX1704x), but reimplemented from scratch to work with smbus/smbus2/smbus3 backends and without external dependencies.

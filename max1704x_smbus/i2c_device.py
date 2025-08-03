@@ -9,6 +9,37 @@ class I2CDevice:
         if probe:
             self.__probe_for_device()
 
+    def read(self, register: int, length: int = 1) -> bytes:
+        """
+        Read bytes from the device at the specified register.
+
+        Parameters
+        ----------
+        register : int
+            Register address to read from.
+        length : int, optional
+            Number of bytes to read (default is 1). Must be between 1 and 32.
+
+        Returns
+        -------
+        bytes
+            The data read from the device.
+        """
+        return bytes(self.bus.read_i2c_block_data(self.device_address, register, length))
+
+    def write(self, register: int, data: bytes) -> None:
+        """
+        Write bytes to the device at the specified register.
+
+        Parameters
+        ----------
+        register : int
+            Register address to write to.
+        data : bytes
+            Data to write to the device. Must not exceed 32 bytes.
+        """
+        self.bus.write_i2c_block_data(self.device_address, register, list(data))
+
     def __probe_for_device(self) -> None:
         """
         Check whether the device is present and responsive at the configured I2C address.

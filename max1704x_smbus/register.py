@@ -11,7 +11,12 @@ class RWRegister:
     This class allows reading and writing to a specific register of an I2C device.
     """
 
+    _READ_ONLY = False
+
     def __init__(self, register_address: int, struct_format: str) -> None:
+        # 16-bit word alignment
+        if not self._READ_ONLY and register_address % 2 != 0:
+            raise ValueError("Register address must be even")
         self.address = register_address
         self.format = struct_format
         self.size = struct.calcsize(struct_format)
@@ -57,6 +62,8 @@ class RORegister(RWRegister):
     Inherits from RWRegister but does not allow writing.
     """
 
+    _READ_ONLY = True
+
     def __set__(self, obj: I2CDeviceDriver, value: int) -> NoReturn:
         """
         Prevent writing to a read-only register.
@@ -83,9 +90,11 @@ class RWBit:
     This class allows reading and writing to a specific bit in a register of an I2C device.
     """
 
+    _READ_ONLY = False
+
     def __init__(self, register_address: int, bit: int, register_byte: int = 1) -> None:
-        # 16-bit word addressing
-        if register_address % 2 != 0:
+        # 16-bit word alignment
+        if not self._READ_ONLY and register_address % 2 != 0:
             raise ValueError("Register address must be even")
 
         if bit < 0 or bit > 7:
@@ -141,6 +150,8 @@ class ROBit(RWBit):
 
     Inherits from RWBit but does not allow writing.
     """
+
+    _READ_ONLY = True
 
     def __set__(self, obj: I2CDeviceDriver, value: bool) -> NoReturn:
         """
@@ -231,6 +242,7 @@ class RWBitsUnsigned:
         ValueError
             If `register_width` is not between 1 and 2.
         """
+        # 16-bit word alignment
         if not self._READ_ONLY and register_address % 2 != 0:
             raise ValueError("Register address must be even")
         if num_bits <= 0:

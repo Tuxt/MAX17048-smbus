@@ -99,8 +99,8 @@ class RWBit:
 
         if bit < 0 or bit > 7:
             raise ValueError("Bit must be between 0 and 7")
-        if register_byte < 0 or register_byte > 2:
-            raise ValueError("Register byte must be between 0 and 2")
+        if register_byte < 1 or register_byte > 2:
+            raise ValueError("Register byte must be between 1 and 2")
 
         self.address = register_address
         self.bit_mask = 1 << bit

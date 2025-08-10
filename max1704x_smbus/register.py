@@ -176,7 +176,7 @@ class RWBit:
         Bit mask for the bit.
     byte : int
         The byte in the register containing the bit (1-2).
-    
+
     Methods
     -------
     __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> bool
@@ -274,6 +274,10 @@ class ROBit(RWBit):
     """
     Read-Only bit in a register.
 
+    This class provides a way to read a single bit in a register of an I2C device.
+    It is used as a descriptor to access the bit value from an instance of a class
+    that includes an I2C device interface.
+
     Attributes
     ----------
     _READ_ONLY : bool
@@ -342,7 +346,7 @@ class RWBitsUnsigned:
         Position of the least significant bit (0-based).
     size : int
         Size of the register in bytes.
-    
+
     Methods
     -------
     __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int
@@ -486,6 +490,10 @@ class ROBitsUnsigned(RWBitsUnsigned):
     The :attr:`_READ_ONLY` class attribute is set to ``True`` to indicate that
     the register is read-only. This allows for odd memory addresses to be used,
     since the address is not modified by the write operation.
+
+    See Also
+    --------
+    :class:`RWBitsUnsigned`
 
     """
 

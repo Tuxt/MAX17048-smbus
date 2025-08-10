@@ -21,7 +21,7 @@ class RWRegister:
         self.format = struct_format
         self.size = struct.calcsize(struct_format)
 
-    def __get__(self, obj: Optional[I2CDeviceDriver], objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
+    def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
         """
         Read the current value from the register.
 
@@ -29,7 +29,7 @@ class RWRegister:
         ----------
         obj : I2CDeviceDriver
             Instance containing the `i2c_device` for communication.
-        objtype : Type[I2CDeviceDriver], optional
+        objtype : Optional[Type[I2CDeviceDriver]], optional
             The type of the `obj` instance.
 
         Returns
@@ -106,7 +106,7 @@ class RWBit:
         self.bit_mask = 1 << bit
         self.byte = register_byte
 
-    def __get__(self, obj: Optional[I2CDeviceDriver], objtype: Optional[Type[I2CDeviceDriver]] = None) -> bool:
+    def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> bool:
         """
         Read the current value of the bit.
 
@@ -114,7 +114,7 @@ class RWBit:
         ----------
         obj : I2CDeviceDriver
             Instance containing the `i2c_device` for communication.
-        objtype : Type[I2CDeviceDriver], optional
+        objtype : Optional[Type[I2CDeviceDriver]], optional
             The type of the `obj` instance.
 
         Returns

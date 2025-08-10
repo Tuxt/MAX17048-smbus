@@ -35,7 +35,7 @@ class RWRegister:
         Returns
         -------
         int
-            Value read from the register.
+            Current value of the register.
         """
         data = obj.i2c_device.read(self.address, self.size)
         return struct.unpack(self.format, data)[0]
@@ -71,7 +71,7 @@ class RORegister(RWRegister):
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing this descriptor.
+            Instance containing the `i2c_device` for communication.
         value : int
             Value attempted to be written.
 

@@ -1,3 +1,10 @@
+"""
+Registers and bits within registers of an I2C device.
+
+Provides classes for representing registers and bits within registers of an I2C
+device.
+"""
+
 import struct
 from typing import NoReturn, Optional, Type
 
@@ -8,12 +15,57 @@ class RWRegister:
     """
     Read-Write register.
 
-    This class allows reading and writing to a specific register of an I2C device.
+    This class provides a way to read and write integer values to a register of an I2C device.
+    It is used as a descriptor to access the register value from an instance of a class that
+    includes an I2C device interface.
+
+    Attributes
+    ----------
+    _READ_ONLY : bool
+        Indicates whether this register is read-only (True) or read-write (False).
+    address : int
+        The register address to read/write.
+    format : str
+        The :py:class:`struct` format string for the register value.
+    size : int
+        The size of the register in bytes.
+
+    Methods
+    -------
+    __get__(obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int
+        Read the current value from the register.
+    __set__(obj: I2CDeviceDriver, value: int) -> None
+        Write a value to the register.
+
+    Notes
+    -----
+    The :attr:`_READ_ONLY` class attribute is set to ``False`` to indicate that
+    the register is read-write. This does not allow for odd memory addresses to
+    be used, since the address is modified by the write operation.
+
+    See Also
+    --------
+    :class:`RORegister`
     """
 
     _READ_ONLY = False
 
     def __init__(self, register_address: int, struct_format: str) -> None:
+        """
+        Initialize the read-write register descriptor.
+
+        Parameters
+        ----------
+        register_address : int
+            The register address to read/write. Must be an even address.
+        struct_format : str
+            The :py:class:`struct` format string for the register value.
+
+        Raises
+        ------
+        ValueError
+            If `register_address` is not an even address.
+        """
         # 16-bit word alignment
         if not self._READ_ONLY and register_address % 2 != 0:
             raise ValueError("Register address must be even")
@@ -59,7 +111,30 @@ class RORegister(RWRegister):
     """
     Read-Only register.
 
-    Inherits from RWRegister but does not allow writing.
+    This class inherits from :class:`RWRegister` but does not allow writing.
+    It is used to define registers that are read-only, such as status or
+    configuration registers.
+
+    Attributes
+    ----------
+    _READ_ONLY : bool
+        Indicates whether this register is read-only (True) or read-write (False).
+    address : int
+        The register address to read/write.
+    format : str
+        The :py:class:`struct` format string for the register value.
+    size : int
+        The size of the register in bytes.
+
+    Notes
+    -----
+    The :attr:`_READ_ONLY` class attribute is set to ``True`` to indicate that
+    the register is read-only. This allows for odd memory addresses to be used,
+    since the address is not modified by the write operation.
+
+    See Also
+    --------
+    :class:`RWRegister`
     """
 
     _READ_ONLY = True
@@ -87,12 +162,63 @@ class RWBit:
     """
     Read-Write bit in a register.
 
-    This class allows reading and writing to a specific bit in a register of an I2C device.
+    This class provides a way to read and write single bits in a register of an
+    I2C device. It is used as a descriptor to access the bit value from an
+    instance of a class that includes an I2C device interface.
+
+    Attributes
+    ----------
+    _READ_ONLY : bool
+        Indicates whether this register is read-only (True) or read-write (False).
+    address : int
+        The register address to read/write. Must be an even address.
+    bit_mask : int
+        Bit mask for the bit.
+    byte : int
+        The byte in the register containing the bit (1-2).
+    
+    Methods
+    -------
+    __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> bool
+        Read the current value of the bit.
+    __set__(self, obj: I2CDeviceDriver, value: bool) -> None
+        Write a value to the bit.
+
+    Notes
+    -----
+    The :attr:`_READ_ONLY` class attribute is set to ``False`` to indicate that
+    the register is read-write. This does not allow for odd memory addresses to
+    be used, since the address is modified by the write operation.
+
+    See Also
+    --------
+    :class:`ROBit`
     """
 
     _READ_ONLY = False
 
     def __init__(self, register_address: int, bit: int, register_byte: int = 1) -> None:
+        """
+        Initialize the read-write bit descriptor.
+
+        Parameters
+        ----------
+        register_address : int
+            The register address to read/write. Must be an even address.
+        bit : int
+            The position of the bit to read/write (0-based).
+        register_byte : int, optional
+            Size of the register in bytes, by default 1.
+
+        Raises
+        ------
+        ValueError
+            If `register_address` is not an even address.
+        ValueError
+            If `bit` is not between 0 and 7.
+        ValueError
+            If `register_byte` is not between 1 and 2.
+        """
         # 16-bit word alignment
         if not self._READ_ONLY and register_address % 2 != 0:
             raise ValueError("Register address must be even")
@@ -148,7 +274,28 @@ class ROBit(RWBit):
     """
     Read-Only bit in a register.
 
-    Inherits from RWBit but does not allow writing.
+    Attributes
+    ----------
+    _READ_ONLY : bool
+        Indicates whether this register is read-only (True) or read-write (False).
+    address : int
+        The register address to read/write. Must be an even address.
+    bit_mask : int
+        Bit mask for the bit.
+    byte : int
+        The byte in the register containing the bit (1-2).
+    bit : int
+        The bit position in the byte (0-7).
+
+    Notes
+    -----
+    The :attr:`_READ_ONLY` class attribute is set to ``True`` to indicate that
+    the register is read-only. This allows for odd memory addresses to be used,
+    since the address is not modified by the write operation.
+
+    See Also
+    --------
+    :class:`RWBit`
     """
 
     _READ_ONLY = True

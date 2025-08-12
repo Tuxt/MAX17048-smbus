@@ -64,7 +64,7 @@ class RWRegister:
         Raises
         ------
         ValueError
-            If `register_address` is not an even address.
+            If ``register_address`` is not an even address.
         """
         # 16-bit word alignment
         if not self._READ_ONLY and register_address % 2 != 0:
@@ -80,9 +80,9 @@ class RWRegister:
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         objtype : Optional[Type[I2CDeviceDriver]], optional
-            The type of the `obj` instance.
+            The type of the ``obj`` instance.
 
         Returns
         -------
@@ -99,7 +99,7 @@ class RWRegister:
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         value : int
             Value to write to the register.
         """
@@ -146,7 +146,7 @@ class RORegister(RWRegister):
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         value : int
             Value attempted to be written.
 
@@ -213,11 +213,11 @@ class RWBit:
         Raises
         ------
         ValueError
-            If `register_address` is not an even address.
+            If ``register_address`` is not an even address.
         ValueError
-            If `bit` is not between 0 and 7.
+            If ``bit`` is not between 0 and 7.
         ValueError
-            If `register_byte` is not between 1 and 2.
+            If ``register_byte`` is not between 1 and 2.
         """
         # 16-bit word alignment
         if not self._READ_ONLY and register_address % 2 != 0:
@@ -239,9 +239,9 @@ class RWBit:
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         objtype : Optional[Type[I2CDeviceDriver]], optional
-            The type of the `obj` instance.
+            The type of the ``obj`` instance.
 
         Returns
         -------
@@ -258,7 +258,7 @@ class RWBit:
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         value : bool
             Value to write to the bit (True or False).
         """
@@ -311,7 +311,7 @@ class ROBit(RWBit):
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         value : bool
             Value attempted to be written.
 
@@ -385,13 +385,13 @@ class RWBitsUnsigned:
         Raises
         ------
         ValueError
-            If `register_address` is not an even address.
+            If ``register_address`` is not an even address.
         ValueError
-            If `num_bits` is not positive.
+            If ``num_bits`` is not positive.
         ValueError
-            If `lowest_bit` is not non-negative.
+            If ``lowest_bit`` is not non-negative.
         ValueError
-            If `register_width` is not between 1 and 2.
+            If ``register_width`` is not between 1 and 2.
         """
         # 16-bit word alignment
         if not self._READ_ONLY and register_address % 2 != 0:
@@ -415,9 +415,9 @@ class RWBitsUnsigned:
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         objtype : Optional[Type[I2CDeviceDriver]], optional
-            The type of the `obj` instance.
+            The type of the ``obj`` instance.
 
         Returns
         -------
@@ -437,14 +437,14 @@ class RWBitsUnsigned:
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         value : int
             Value to write to the bits.
 
         Raises
         ------
         ValueError
-            If `value` is out of range for the bit field.
+            If ``value`` is out of range for the bit field.
         """
         if value < 0 or value >= (1 << self.num_bits):
             raise ValueError(f"Value {value} out of range for {self.num_bits} bits")
@@ -506,7 +506,7 @@ class ROBitsUnsigned(RWBitsUnsigned):
         Parameters
         ----------
         obj : I2CDeviceDriver
-            Instance containing the `i2c_device` for communication.
+            Instance containing the ``i2c_device`` for communication.
         value : int
             Value attempted to be written.
 

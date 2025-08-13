@@ -63,7 +63,7 @@ class RWRegister:
 
         Raises
         ------
-        ValueError
+        :py:exc:`ValueError`
             If ``register_address`` is not an even address.
         """
         # 16-bit word alignment
@@ -152,7 +152,7 @@ class RORegister(RWRegister):
 
         Raises
         ------
-        AttributeError
+        :py:exc:`AttributeError`
             Always raised to indicate the register is read-only.
         """
         raise AttributeError("Cannot write to read-only register")
@@ -212,11 +212,11 @@ class RWBit:
 
         Raises
         ------
-        ValueError
+        :py:exc:`ValueError`
             If ``register_address`` is not an even address.
-        ValueError
+        :py:exc:`ValueError`
             If ``bit`` is not between 0 and 7.
-        ValueError
+        :py:exc:`ValueError`
             If ``register_byte`` is not between 1 and 2.
         """
         # 16-bit word alignment
@@ -317,7 +317,7 @@ class ROBit(RWBit):
 
         Raises
         ------
-        AttributeError
+        :py:exc:`AttributeError`
             Always raised to indicate the bit is read-only.
         """
         raise AttributeError("Cannot write to read-only bit")
@@ -384,13 +384,13 @@ class RWBitsUnsigned:
 
         Raises
         ------
-        ValueError
+        :py:exc:`ValueError`
             If ``register_address`` is not an even address.
-        ValueError
+        :py:exc:`ValueError`
             If ``num_bits`` is not positive.
-        ValueError
+        :py:exc:`ValueError`
             If ``lowest_bit`` is not non-negative.
-        ValueError
+        :py:exc:`ValueError`
             If ``register_width`` is not between 1 and 2.
         """
         # 16-bit word alignment
@@ -443,7 +443,7 @@ class RWBitsUnsigned:
 
         Raises
         ------
-        ValueError
+        :py:exc:`ValueError`
             If ``value`` is out of range for the bit field.
         """
         if value < 0 or value >= (1 << self.num_bits):
@@ -512,7 +512,7 @@ class ROBitsUnsigned(RWBitsUnsigned):
 
         Raises
         ------
-        AttributeError
+        :py:exc:`AttributeError`
             Always raised to indicate the bit field is read-only.
         """
         raise AttributeError("Cannot write to read-only bit field")

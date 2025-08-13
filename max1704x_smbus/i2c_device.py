@@ -18,13 +18,15 @@ class I2CDevice:
         register : int
             Register address to read from.
         length : int, optional
-            Number of bytes to read (default is 1). Must be between 1 and 32.
+            Number of bytes to read. Must be ``1`` or ``2`` (default is ``1``).
 
         Returns
         -------
         bytes
             The data read from the device.
         """
+        if length not in (1, 2):
+            raise ValueError("Length must be 1 or 2.")
         return bytes(self.bus.read_i2c_block_data(self.device_address, register, length))
 
     def write(self, register: int, data: bytes) -> None:
@@ -36,8 +38,10 @@ class I2CDevice:
         register : int
             Register address to write to.
         data : bytes
-            Data to write to the device. Must not exceed 32 bytes.
+            Bytes to write to the device. Must be ``1`` or ``2`` bytes.
         """
+        if len(data) not in (1, 2):
+            raise ValueError("Data must be 1 or 2 bytes.")
         self.bus.write_i2c_block_data(self.device_address, register, list(data))
 
     def __probe_for_device(self) -> None:

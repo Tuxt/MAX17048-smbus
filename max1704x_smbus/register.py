@@ -21,8 +21,6 @@ class RWRegister:
 
     Attributes
     ----------
-    _READ_ONLY : bool
-        Indicates whether this register is read-only (True) or read-write (False).
     address : int
         The register address to read/write.
     format : str
@@ -37,18 +35,10 @@ class RWRegister:
     __set__(obj: I2CDeviceDriver, value: int) -> None
         Write a value to the register.
 
-    Notes
-    -----
-    The :attr:`_READ_ONLY` class attribute is set to ``False`` to indicate that
-    the register is read-write. This does not allow for odd memory addresses to
-    be used, since the address is modified by the write operation.
-
     See Also
     --------
     :class:`RORegister`
     """
-
-    _READ_ONLY = False
 
     def __init__(self, register_address: int, struct_format: str) -> None:
         """
@@ -57,18 +47,10 @@ class RWRegister:
         Parameters
         ----------
         register_address : int
-            The register address to read/write. Must be an even address.
+            The register address to read/write.
         struct_format : str
             The :py:class:`struct` format string for the register value.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If ``register_address`` is not an even address.
         """
-        # 16-bit word alignment
-        if not self._READ_ONLY and register_address % 2 != 0:
-            raise ValueError("Register address must be even")
         self.address = register_address
         self.format = struct_format
         self.size = struct.calcsize(struct_format)
@@ -117,8 +99,6 @@ class RORegister(RWRegister):
 
     Attributes
     ----------
-    _READ_ONLY : bool
-        Indicates whether this register is read-only (True) or read-write (False).
     address : int
         The register address to read/write.
     format : str
@@ -126,18 +106,10 @@ class RORegister(RWRegister):
     size : int
         The size of the register in bytes.
 
-    Notes
-    -----
-    The :attr:`_READ_ONLY` class attribute is set to ``True`` to indicate that
-    the register is read-only. This allows for odd memory addresses to be used,
-    since the address is not modified by the write operation.
-
     See Also
     --------
     :class:`RWRegister`
     """
-
-    _READ_ONLY = True
 
     def __set__(self, obj: I2CDeviceDriver, value: int) -> NoReturn:
         """
@@ -168,10 +140,8 @@ class RWBit:
 
     Attributes
     ----------
-    _READ_ONLY : bool
-        Indicates whether this register is read-only (True) or read-write (False).
     address : int
-        The register address to read/write. Must be an even address.
+        The register address to read/write.
     bit_mask : int
         Bit mask for the bit.
     byte : int
@@ -184,18 +154,10 @@ class RWBit:
     __set__(self, obj: I2CDeviceDriver, value: bool) -> None
         Write a value to the bit.
 
-    Notes
-    -----
-    The :attr:`_READ_ONLY` class attribute is set to ``False`` to indicate that
-    the register is read-write. This does not allow for odd memory addresses to
-    be used, since the address is modified by the write operation.
-
     See Also
     --------
     :class:`ROBit`
     """
-
-    _READ_ONLY = False
 
     def __init__(self, register_address: int, bit: int, register_byte: int = 1) -> None:
         """
@@ -204,7 +166,7 @@ class RWBit:
         Parameters
         ----------
         register_address : int
-            The register address to read/write. Must be an even address.
+            The register address to read/write.
         bit : int
             The position of the bit to read/write (0-based).
         register_byte : int, optional
@@ -213,16 +175,10 @@ class RWBit:
         Raises
         ------
         :py:exc:`ValueError`
-            If ``register_address`` is not an even address.
-        :py:exc:`ValueError`
             If ``bit`` is not between 0 and 7.
         :py:exc:`ValueError`
             If ``register_byte`` is not between 1 and 2.
         """
-        # 16-bit word alignment
-        if not self._READ_ONLY and register_address % 2 != 0:
-            raise ValueError("Register address must be even")
-
         if bit < 0 or bit > 7:
             raise ValueError("Bit must be between 0 and 7")
         if register_byte < 1 or register_byte > 2:
@@ -280,10 +236,8 @@ class ROBit(RWBit):
 
     Attributes
     ----------
-    _READ_ONLY : bool
-        Indicates whether this register is read-only (True) or read-write (False).
     address : int
-        The register address to read/write. Must be an even address.
+        The register address to read/write.
     bit_mask : int
         Bit mask for the bit.
     byte : int
@@ -291,18 +245,10 @@ class ROBit(RWBit):
     bit : int
         The bit position in the byte (0-7).
 
-    Notes
-    -----
-    The :attr:`_READ_ONLY` class attribute is set to ``True`` to indicate that
-    the register is read-only. This allows for odd memory addresses to be used,
-    since the address is not modified by the write operation.
-
     See Also
     --------
     :class:`RWBit`
     """
-
-    _READ_ONLY = True
 
     def __set__(self, obj: I2CDeviceDriver, value: bool) -> NoReturn:
         """
@@ -334,8 +280,6 @@ class RWBitsUnsigned:
 
     Attributes
     ----------
-    _READ_ONLY : bool
-        Indicates whether this register is read-only (True) or read-write (False).
     address : int
         The register address to read/write.
     mask : int
@@ -354,18 +298,10 @@ class RWBitsUnsigned:
     __set__(self, obj: I2CDeviceDriver, value: int) -> None
         Write a value to the bits.
 
-    Notes
-    -----
-    The :attr:`_READ_ONLY` class attribute is set to ``False`` to indicate that
-    the register is read-write. This does not allow for odd memory addresses to
-    be used, since the address is modified by the write operation.
-
     See Also
     --------
     :class:`ROBitsUnsigned`
     """
-
-    _READ_ONLY = False
 
     def __init__(self, register_address: int, num_bits: int, lowest_bit: int, register_width: int = 1) -> None:
         """
@@ -374,7 +310,7 @@ class RWBitsUnsigned:
         Parameters
         ----------
         register_address : int
-            The register address to read/write. Must be an even address.
+            The register address to read/write.
         num_bits : int
             Number of bits in the bit field (must be positive).
         lowest_bit : int
@@ -385,17 +321,12 @@ class RWBitsUnsigned:
         Raises
         ------
         :py:exc:`ValueError`
-            If ``register_address`` is not an even address.
-        :py:exc:`ValueError`
             If ``num_bits`` is not positive.
         :py:exc:`ValueError`
             If ``lowest_bit`` is not non-negative.
         :py:exc:`ValueError`
             If ``register_width`` is not between 1 and 2.
         """
-        # 16-bit word alignment
-        if not self._READ_ONLY and register_address % 2 != 0:
-            raise ValueError("Register address must be even")
         if num_bits <= 0:
             raise ValueError("Number of bits must be positive")
         if lowest_bit < 0:
@@ -472,8 +403,6 @@ class ROBitsUnsigned(RWBitsUnsigned):
 
     Attributes
     ----------
-    _READ_ONLY : bool
-        Indicates whether this register is read-only (True) or read-write (False).
     address : int
         The register address to read.
     mask : int
@@ -485,19 +414,11 @@ class ROBitsUnsigned(RWBitsUnsigned):
     size : int
         Size of the register in bytes.
 
-    Notes
-    -----
-    The :attr:`_READ_ONLY` class attribute is set to ``True`` to indicate that
-    the register is read-only. This allows for odd memory addresses to be used,
-    since the address is not modified by the write operation.
-
     See Also
     --------
     :class:`RWBitsUnsigned`
 
     """
-
-    _READ_ONLY = True
 
     def __set__(self, obj: I2CDeviceDriver, value: int) -> NoReturn:
         """

@@ -11,6 +11,83 @@ from typing import NoReturn, Optional, Type
 from .typing import I2CDeviceDriver
 
 
+class RegisterField:
+    def __init__(
+        self,
+        register_address: int,
+        num_bits: int,
+        lowest_bit: int = 0,
+        signed: bool = False,
+        independent_bytes: bool = False,
+    ) -> None:
+        field_span = lowest_bit + num_bits
+
+        # INPUT VALIDATION
+        # Register address must be even (2 bytes): Some registers require writing 2 bytes
+        if register_address % 2:
+            raise ValueError(f"Register address must be even, got {register_address}")
+        if not (0 < num_bits <= 16):
+            raise ValueError(f"Invalid num_bits {num_bits}, must be in range 1-16")
+        if not (0 <= lowest_bit < 16):
+            raise ValueError(f"Invalid lowest_bit {lowest_bit}, must be in range 0-15")
+        # The offset and size can't exceed 16 bits
+        if field_span > 16:
+            raise ValueError(f"Invalid field size: lowest_bit ({lowest_bit}) + num_bits ({num_bits}) exceeds 16 bits")
+
+        # DATA CALCULATION
+        self.address = (
+            register_address + 1 if independent_bytes and lowest_bit < 8 and field_span <= 8 else register_address
+        )
+        self.size = 2 if not independent_bytes or (lowest_bit < 8 and field_span > 8) else 1
+        self.num_bits = num_bits
+        self.lowest_bit = lowest_bit
+        self.mask = ((1 << num_bits) - 1) << lowest_bit  # 16-bit mask (it's already 8-bit if LSB)
+        if self.size == 1 and lowest_bit >= 8:
+            self.mask >>= 8  # 8-bit mask (if only one byte and it's MSB)
+        self.signed = signed
+
+    def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
+        data = obj.i2c_device.read(self.address, self.size)
+
+        # Join bytes (if 2 bytes): Unsigned
+        reg = 0
+        for byte in data:
+            reg = (reg << 8) | byte
+        # Mask field
+        data = (reg & self.mask) >> self.lowest_bit
+
+        # Apply sign extension if needed
+        return self._convert_signed_unsigned(data, self.num_bits) if self.signed else data
+
+    def __set__(self, obj: I2CDeviceDriver, value: int) -> None:
+        if self.signed:
+            value = self._convert_signed_unsigned(value, self.num_bits, unsigned_to_signed=False)
+
+        data = obj.i2c_device.read(self.address, self.size)
+
+        # Join bytes (if 2 bytes): Unsigned
+        reg = 0
+        for byte in data:
+            reg = (reg << 8) | byte
+
+        reg &= ~self.mask
+        reg |= value << self.lowest_bit
+
+        data = list(reg.to_bytes(self.size, "big"))
+        obj.i2c_device.write(self.address, data)
+
+    @staticmethod
+    def _convert_signed_unsigned(value: int, num_bits: int, unsigned_to_signed: bool = True) -> int:
+        bit_limit = 1 << num_bits
+
+        if unsigned_to_signed and not (0 <= value < bit_limit):
+            raise ValueError(f"Value {value} out of range for unsigned {num_bits}-bit integer")
+        if not unsigned_to_signed and not (-(bit_limit // 2) <= value < bit_limit // 2):
+            raise ValueError(f"Value {value} out of range for signed {num_bits}-bit integer")
+        sign_bit = 1 << (num_bits - 1)
+        return (value ^ sign_bit) - sign_bit if unsigned_to_signed else (value + sign_bit) ^ sign_bit
+
+
 class RWRegister:
     """
     Read-Write register.

@@ -80,6 +80,17 @@ class RegisterField:
         read_only : bool, optional
             If ``True``, the field is read-only and any attempt to assign a value
             will raise an :py:exc:`AttributeError`. Defaults to ``False``.
+            
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If the register address is not even.
+        :py:exc:`ValueError`
+            If ``num_bits`` is not in the range 1-16.
+        :py:exc:`ValueError`
+            If ``lowest_bit`` is not in the range 0-15.
+        :py:exc:`ValueError`
+            If the field size (``lowest_bit + num_bits``) exceeds 16 bits.
         """
         field_span = lowest_bit + num_bits
 
@@ -146,6 +157,11 @@ class RegisterField:
             Instance containing the ``i2c_device`` for communication.
         value : int
             Field value to write into the register.
+            
+        Raises
+        ------
+        :py:exc:`AttributeError`
+            If attempting to write to a read-only register field.
         """
         if self.read_only:
             raise AttributeError("Cannot write to read-only register field")
@@ -189,6 +205,11 @@ class RegisterField:
         -------
         int
             Converted integer in the requested representation.
+            
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If the value is out of range for the specified bit width.
         """
         bit_limit = 1 << num_bits
 

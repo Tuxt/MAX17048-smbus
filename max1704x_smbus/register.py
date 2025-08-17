@@ -36,6 +36,8 @@ class RegisterField:
         Bit mask used to isolate the field value inside the register.
     signed : bool
         Whether the field value is signed.
+    read_only : bool
+        Whether the field is read-only
 
     Methods
     -------
@@ -55,6 +57,7 @@ class RegisterField:
         lowest_bit: int = 0,
         signed: bool = False,
         independent_bytes: bool = False,
+        read_only: bool = False,
     ) -> None:
         """
         Initialize the read-write register field.
@@ -74,6 +77,9 @@ class RegisterField:
             If ``True``, the field can be accessed using only the individual byte
             that contains it, instead of always requiring a 2-byte transaction.
             Defaults to ``False``.
+        read_only : bool, optional
+            If ``True``, the field is read-only and any attempt to assign a value
+            will raise an :py:exc:`AttributeError`. Defaults to ``False``.
         """
         field_span = lowest_bit + num_bits
 
@@ -100,6 +106,7 @@ class RegisterField:
         if self.size == 1 and lowest_bit >= 8:
             self.mask >>= 8  # 8-bit mask (if only one byte and it's MSB)
         self.signed = signed
+        self.read_only = read_only
 
     def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
         """
@@ -140,6 +147,8 @@ class RegisterField:
         value : int
             Field value to write into the register.
         """
+        if self.read_only:
+            raise AttributeError("Cannot write to read-only register field")
         if self.signed:
             value = self._convert_signed_unsigned(value, self.num_bits, unsigned_to_signed=False)
 

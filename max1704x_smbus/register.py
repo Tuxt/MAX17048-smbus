@@ -12,6 +12,42 @@ from .typing import I2CDeviceDriver
 
 
 class RegisterField:
+    """
+    Read-write field within a register.
+
+    Represents a subfield inside a 16-bit device register accessed over I²C.
+    Handles masking, shifting, and optional sign extension so that field values
+    can be read and written directly as Python integers, without manual bit
+    manipulation.
+
+    Attributes
+    ----------
+    address : int
+        I²C register address where the field is located.
+    size : int
+        Number of bytes required to access the field (1 or 2).
+        Registers are always 16-bit, but some fields can be accessed using
+        only one byte when appropriate.
+    num_bits : int
+        Number of bits used by the field.
+    lowest_bit : int
+        Position of the least significant bit of the field within the register.
+    mask : int
+        Bit mask used to isolate the field value inside the register.
+    signed : bool
+        Whether the field value is signed.
+
+    Methods
+    -------
+    __get__(obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int
+        Read the field value from the register.
+    __set__(obj: I2CDeviceDriver, value: int) -> None
+        Write an integer value into the field.
+    _convert_signed_unsigned(value: int, num_bits: int, unsigned_to_signed: bool = True) -> int
+        Convert between signed and unsigned values in a ``num_bits``-bit field.
+        (Private helper, not intended for public use.)
+    """
+
     def __init__(
         self,
         register_address: int,
@@ -20,6 +56,25 @@ class RegisterField:
         signed: bool = False,
         independent_bytes: bool = False,
     ) -> None:
+        """
+        Initialize the read-write register field.
+
+        Parameters
+        ----------
+        register_address : int
+            I²C register address where the field is located.
+        num_bits : int
+            Number of bits used by the field.
+        lowest_bit : int, optional
+            Position of the least significant bit of the field within the register.
+            Defaults to ``0``.
+        signed : bool, optional
+            Whether the field value is signed. Defaults to ``False``.
+        independent_bytes : bool, optional
+            If ``True``, the field can be accessed using only the individual byte
+            that contains it, instead of always requiring a 2-byte transaction.
+            Defaults to ``False``.
+        """
         field_span = lowest_bit + num_bits
 
         # INPUT VALIDATION
@@ -47,6 +102,21 @@ class RegisterField:
         self.signed = signed
 
     def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
+        """
+        Read the current field value from the register.
+
+        Parameters
+        ----------
+        obj : I2CDeviceDriver
+            Instance containing the ``i2c_device`` for communication.
+        objtype : Optional[Type[I2CDeviceDriver]], optional
+            The type of the ``obj`` instance.
+
+        Returns
+        -------
+        int
+            Value of the field extracted from the register.
+        """
         data = obj.i2c_device.read(self.address, self.size)
 
         # Join bytes (if 2 bytes): Unsigned
@@ -60,6 +130,16 @@ class RegisterField:
         return self._convert_signed_unsigned(data, self.num_bits) if self.signed else data
 
     def __set__(self, obj: I2CDeviceDriver, value: int) -> None:
+        """
+        Write a value to the field within the register.
+
+        Parameters
+        ----------
+        obj : I2CDeviceDriver
+            Instance containing the ``i2c_device`` for communication.
+        value : int
+            Field value to write into the register.
+        """
         if self.signed:
             value = self._convert_signed_unsigned(value, self.num_bits, unsigned_to_signed=False)
 
@@ -78,6 +158,29 @@ class RegisterField:
 
     @staticmethod
     def _convert_signed_unsigned(value: int, num_bits: int, unsigned_to_signed: bool = True) -> int:
+        """
+        Convert an integer between signed and unsigned representations.
+
+        This helper interprets a limited-width integer either as signed
+        or unsigned, depending on the ``unsigned_to_signed`` param. It can
+        be used to reinterpret raw register values or to encode signed
+        values for transmission.
+
+        Parameters
+        ----------
+        value : int
+            Integer value to convert.
+        num_bits : int
+            Number of valid bits in the value (bit width).
+        unsigned_to_signed : bool, optional
+            If True (default), interprets the unsigned input as signed.
+            If False, converts a signed input to its unsigned representation.
+
+        Returns
+        -------
+        int
+            Converted integer in the requested representation.
+        """
         bit_limit = 1 << num_bits
 
         if unsigned_to_signed and not (0 <= value < bit_limit):

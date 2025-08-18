@@ -32,8 +32,7 @@ Create a 3-bit read-only field from bit 7 to bit 5 (signed):
 All registers are interpreted as big-endian.
 """
 
-import struct
-from typing import NoReturn, Optional, Type
+from typing import Optional, Type
 
 from .typing import I2CDeviceDriver
 
@@ -107,7 +106,7 @@ class RegisterField:
         read_only : bool, optional
             If ``True``, the field is read-only and any attempt to assign a value
             will raise an :py:exc:`AttributeError`. Defaults to ``False``.
-            
+
         Raises
         ------
         :py:exc:`ValueError`
@@ -184,7 +183,7 @@ class RegisterField:
             Instance containing the ``i2c_device`` for communication.
         value : int
             Field value to write into the register.
-            
+
         Raises
         ------
         :py:exc:`AttributeError`
@@ -232,7 +231,7 @@ class RegisterField:
         -------
         int
             Converted integer in the requested representation.
-            
+
         Raises
         ------
         :py:exc:`ValueError`

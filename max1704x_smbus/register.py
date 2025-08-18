@@ -153,8 +153,11 @@ class RegisterField:
         self.num_bits = num_bits
         self.lowest_bit = lowest_bit
         self.mask = ((1 << num_bits) - 1) << lowest_bit  # 16-bit mask (it's already 8-bit if LSB)
+        # Adjust mask and lowest_bit for 1 byte register
         if self.size == 1 and lowest_bit >= 8:
             self.mask >>= 8  # 8-bit mask (if only one byte and it's MSB)
+            self.lowest_bit -= 8
+
         self.signed = signed
         self.read_only = read_only
 

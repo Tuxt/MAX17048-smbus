@@ -15,7 +15,7 @@ Instantiate the I²C device on bus 1 at address 0x36, and read 1 byte from regis
 >>> data = dev.read(0x04)
 """
 
-from .smbus import SMBus
+from .smbus_loader import SMBus
 
 
 class I2CDevice:

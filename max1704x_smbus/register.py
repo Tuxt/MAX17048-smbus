@@ -42,7 +42,7 @@ All registers are interpreted as big-endian.
 
 from typing import Optional, Type
 
-from .typing import I2CDeviceDriver
+from .protocols import I2CDeviceDriver
 
 # Constants for `used_bytes` parameter
 USED_BYTES_MSB: int = -1

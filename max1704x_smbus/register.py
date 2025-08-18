@@ -221,6 +221,169 @@ class RegisterField:
         return (value ^ sign_bit) - sign_bit if unsigned_to_signed else (value + sign_bit) ^ sign_bit
 
 
+def RWRegister(  # noqa: N802
+    register_address: int, used_byte: int, signed: bool = False, independent_bytes: bool = False
+) -> RegisterField:
+    """
+    Create a read-write register field representing one or two bytes.
+
+    Parameters
+    ----------
+    register_address : int
+        The register address to read from or write to.
+    used_byte : int
+        Which byte(s) of the register to access:
+        - ``-1`` = Most Significant Byte (MSB, first byte)
+        - ``0`` = Both bytes (16-bit register)
+        - ``1`` = Least Significant Byte (LSB, second byte)
+    signed : bool, optional
+        Whether the register should be interpreted as signed.
+        Defaults to ``False``.
+    independent_bytes : bool, optional
+        If ``True``, the register can be accessed using only the
+        individual byte that contains it, instead of always
+        requiring access to the full 16-bit register.
+        Defaults to ``False``.
+
+    Returns
+    -------
+    RegisterField
+        A new ``RegisterField`` instance.
+
+    See Also
+    --------
+    :class:`RegisterField`
+
+    Notes
+    -----
+    All registers are assumed to use big-endian ordering:
+    the first byte is the MSB and the second byte is the LSB.
+    """
+    return RegisterField(
+        register_address,
+        num_bits=16 - 8 * abs(used_byte),
+        lowest_bit=8 * (used_byte == -1),
+        signed=signed,
+        independent_bytes=independent_bytes,
+        read_only=False,
+    )
+
+
+def RORegister(  # noqa: N802
+    register_address: int, used_byte: int, signed: bool = False, independent_bytes: bool = False
+) -> RegisterField:
+    """
+    Create a read-only register field representing one or two bytes.
+
+    Parameters
+    ----------
+    register_address : int
+        The register address to read from.
+    used_byte : int
+        Which byte(s) of the register to access:
+        - ``-1`` = Most Significant Byte (MSB, first byte)
+        - ``0`` = Both bytes (16-bit register)
+        - ``1`` = Least Significant Byte (LSB, second byte)
+    signed : bool, optional
+        Whether the register should be interpreted as signed.
+        Defaults to ``False``.
+    independent_bytes : bool, optional
+        If ``True``, the register can be accessed using only the
+        individual byte that contains it, instead of always
+        requiring access to the full 16-bit register.
+        Defaults to ``False``.
+
+    Returns
+    -------
+    RegisterField
+        A new ``RegisterField`` instance.
+
+    See Also
+    --------
+    :class:`RegisterField`
+
+    Notes
+    -----
+    All registers are assumed to use big-endian ordering:
+    the first byte is the MSB and the second byte is the LSB.
+    """
+    return RegisterField(
+        register_address,
+        num_bits=16 - 8 * abs(used_byte),
+        lowest_bit=8 * (used_byte == -1),
+        signed=signed,
+        independent_bytes=independent_bytes,
+        read_only=True,
+    )
+
+
+def RWBit(register_address: int, bit: int, independent_bytes: bool = False) -> RegisterField:  # noqa: N802
+    """
+    Create a read-write register field representing a single bit.
+
+    Parameters
+    ----------
+    register_address : int
+        The register address to read from or write to.
+    bit : int
+        Which bit of the register to access.
+    independent_bytes : bool, optional
+        If ``True``, the register can be accessed using only the
+        individual byte that contains it, instead of always
+        requiring access to the full 16-bit register.
+        Defaults to ``False``.
+
+    Returns
+    -------
+    RegisterField
+        A new ``RegisterField`` instance.
+
+    See Also
+    --------
+    :class:`RegisterField`
+
+    Notes
+    -----
+    All registers are assumed to use big-endian ordering.
+    """
+    return RegisterField(
+        register_address, num_bits=1, lowest_bit=bit, independent_bytes=independent_bytes, read_only=False
+    )
+
+
+def ROBit(register_address: int, bit: int, independent_bytes: bool = False) -> RegisterField:  # noqa: N802
+    """
+    Create a read-only register field representing a single bit.
+
+    Parameters
+    ----------
+    register_address : int
+        The register address to read from.
+    bit : int
+        Which bit of the register to access.
+    independent_bytes : bool, optional
+        If ``True``, the register can be accessed using only the
+        individual byte that contains it, instead of always
+        requiring access to the full 16-bit register.
+        Defaults to ``False``.
+
+    Returns
+    -------
+    RegisterField
+        A new ``RegisterField`` instance.
+
+    See Also
+    --------
+    :class:`RegisterField`
+
+    Notes
+    -----
+    All registers are assumed to use big-endian ordering.
+    """
+    return RegisterField(
+        register_address, num_bits=1, lowest_bit=bit, independent_bytes=independent_bytes, read_only=True
+    )
+
 class RWRegister:
     """
     Read-Write register.

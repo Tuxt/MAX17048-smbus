@@ -1,8 +1,35 @@
 """
-Registers and bits within registers of an I2C device.
+Register fields of an I²C device.
 
-Provides classes for representing registers and bits within registers of an I2C
-device.
+Provides the :class:`RegisterField` class for representing device registers or
+arbitrary subfields within them. A field can cover the entire 16-bit register,
+a single byte, any group of bits, or just one bit. Helper functions
+(:func:`RWRegister`, :func:`RORegister`, :func:`RWBit`, :func:`ROBit`) are
+included for the most common cases.
+
+Examples
+--------
+Create a read-write 16-bit register (unsigned):
+
+>>> reg = RWRegister(0x0A, used_byte=0)
+>>> # 0x0A: [OOOOOOOO] 0x0B [OOOOOOOO]
+
+Create a read-only 8-bit register (signed) on the first byte:
+
+>>> reg = RORegister(0x0A, used_byte=-1, signed=True)
+>>> # 0x0A: [OOOOOOOO] 0x0B [--------]
+
+Create a read-only status bit:
+
+>>> flag = ROBit(0x04, bit=13)
+>>> # 0x04: [--O-----] 0x05 [--------]
+
+Create a 3-bit read-only field from bit 7 to bit 5 (signed):
+
+>>> mode = RegisterField(0x0C, num_bits=3, lowest_bit=5, signed=True, read_only=True)
+>>> # 0x0C: [--------] 0x0D [OOO-----]
+
+All registers are interpreted as big-endian.
 """
 
 import struct

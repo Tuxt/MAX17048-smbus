@@ -7,16 +7,24 @@ a single byte, any group of bits, or just one bit. Helper functions
 (:func:`RWRegister`, :func:`RORegister`, :func:`RWBit`, :func:`ROBit`) are
 included for the most common cases.
 
+Constants
+---------
+The following constants are provided for the ``used_bytes`` parameter:
+
+- ``USED_BYTES_MSB``  (-1): Use only the most significant byte.
+- ``USED_BYTES_BOTH`` (0):  Use both bytes (the full 16-bit register).
+- ``USED_BYTES_LSB``  (1):  Use only the least significant byte.
+
 Examples
 --------
 Create a read-write 16-bit register (unsigned):
 
->>> reg = RWRegister(0x0A, used_byte=0)
+>>> reg = RWRegister(0x0A, used_bytes=USED_BYTES_BOTH)
 >>> # 0x0A: [OOOOOOOO] 0x0B [OOOOOOOO]
 
 Create a read-only 8-bit register (signed) on the first byte:
 
->>> reg = RORegister(0x0A, used_byte=-1, signed=True)
+>>> reg = RORegister(0x0A, used_bytes=USED_BYTES_MSB, signed=True)
 >>> # 0x0A: [OOOOOOOO] 0x0B [--------]
 
 Create a read-only status bit:
@@ -35,6 +43,11 @@ All registers are interpreted as big-endian.
 from typing import Optional, Type
 
 from .typing import I2CDeviceDriver
+
+# Constants for `used_bytes` parameter
+USED_BYTES_MSB: int = -1
+USED_BYTES_BOTH: int = 0
+USED_BYTES_LSB: int = 1
 
 
 class RegisterField:
@@ -248,7 +261,7 @@ class RegisterField:
 
 
 def RWRegister(  # noqa: N802
-    register_address: int, used_byte: int, signed: bool = False, independent_bytes: bool = False
+    register_address: int, used_bytes: int, signed: bool = False, independent_bytes: bool = False
 ) -> RegisterField:
     """
     Create a read-write register field representing one or two bytes.
@@ -257,11 +270,11 @@ def RWRegister(  # noqa: N802
     ----------
     register_address : int
         The register address to read from or write to.
-    used_byte : int
+    used_bytes : int
         Which byte(s) of the register to access:
-        - ``-1`` = Most Significant Byte (MSB, first byte)
-        - ``0`` = Both bytes (16-bit register)
-        - ``1`` = Least Significant Byte (LSB, second byte)
+        - ``USED_BYTES_MSB``  (-1): Use only the most significant byte (first byte)
+        - ``USED_BYTES_BOTH`` (0):  Use both bytes (the full 16-bit register).
+        - ``USED_BYTES_LSB``  (1):  Use only the least significant byte (second byte).
     signed : bool, optional
         Whether the register should be interpreted as signed.
         Defaults to ``False``.
@@ -287,8 +300,8 @@ def RWRegister(  # noqa: N802
     """
     return RegisterField(
         register_address,
-        num_bits=16 - 8 * abs(used_byte),
-        lowest_bit=8 * (used_byte == -1),
+        num_bits=16 - 8 * abs(used_bytes),
+        lowest_bit=8 * (used_bytes == -1),
         signed=signed,
         independent_bytes=independent_bytes,
         read_only=False,
@@ -296,7 +309,7 @@ def RWRegister(  # noqa: N802
 
 
 def RORegister(  # noqa: N802
-    register_address: int, used_byte: int, signed: bool = False, independent_bytes: bool = False
+    register_address: int, used_bytes: int, signed: bool = False, independent_bytes: bool = False
 ) -> RegisterField:
     """
     Create a read-only register field representing one or two bytes.
@@ -305,11 +318,11 @@ def RORegister(  # noqa: N802
     ----------
     register_address : int
         The register address to read from.
-    used_byte : int
+    used_bytes : int
         Which byte(s) of the register to access:
-        - ``-1`` = Most Significant Byte (MSB, first byte)
-        - ``0`` = Both bytes (16-bit register)
-        - ``1`` = Least Significant Byte (LSB, second byte)
+        - ``USED_BYTES_MSB``  (-1): Use only the most significant byte (first byte)
+        - ``USED_BYTES_BOTH`` (0):  Use both bytes (the full 16-bit register).
+        - ``USED_BYTES_LSB``  (1):  Use only the least significant byte (second byte).
     signed : bool, optional
         Whether the register should be interpreted as signed.
         Defaults to ``False``.
@@ -335,8 +348,8 @@ def RORegister(  # noqa: N802
     """
     return RegisterField(
         register_address,
-        num_bits=16 - 8 * abs(used_byte),
-        lowest_bit=8 * (used_byte == -1),
+        num_bits=16 - 8 * abs(used_bytes),
+        lowest_bit=8 * (used_bytes == -1),
         signed=signed,
         independent_bytes=independent_bytes,
         read_only=True,

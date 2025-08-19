@@ -33,6 +33,6 @@ elif find_spec("smbus") is not None:
     _BACKEND = "smbus"
     _USING_SMBUS23 = False
 else:
-    raise ModuleNotFoundError("No suitable SMBus library found. Please install 'smbus3', 'smbus2', or 'smbus1'.")
+    raise ModuleNotFoundError("No suitable SMBus library found. Please install 'smbus3', 'smbus2', or 'smbus'.")
 
 __all__ = ["_BACKEND", "_USING_SMBUS23", "SMBus"]

@@ -36,9 +36,9 @@ class I2CDevice:
 
     Methods
     -------
-    read(register: int, length: int = 1) -> bytes
+    read(register: int, length: int = 1) -> list[int]
         Read bytes from the device starting at the given register.
-    write(register: int, data: bytes) -> None
+    write(register: int, data: list[int]) -> None
         Write bytes to the device starting at the given register.
     """
 
@@ -63,7 +63,7 @@ class I2CDevice:
         if probe:
             self.__probe_for_device()
 
-    def read(self, register: int, length: int = 1) -> bytes:
+    def read(self, register: int, length: int = 1) -> list[int]:
         """
         Read one or two bytes from the device starting at the given register.
 
@@ -80,7 +80,7 @@ class I2CDevice:
 
         Returns
         -------
-        bytes
+        list[int]
             Data read from the device.
 
         Raises
@@ -90,9 +90,9 @@ class I2CDevice:
         """
         if length not in (1, 2):
             raise ValueError("Length must be 1 or 2.")
-        return bytes(self.bus.read_i2c_block_data(self.device_address, register, length))
+        return self.bus.read_i2c_block_data(self.device_address, register, length)
 
-    def write(self, register: int, data: bytes) -> None:
+    def write(self, register: int, data: list[int]) -> None:
         """
         Write one or two bytes to the I²C device starting at the given register.
 
@@ -104,8 +104,8 @@ class I2CDevice:
         ----------
         register : int
             Register address to write to.
-        data : bytes
-            Bytes to write to the device. Must be ``1`` or ``2`` bytes.
+        data : list[int]
+            Bytes (as integer list) to write to the device. Must be ``1`` or ``2`` bytes.
 
         Raises
         ------
@@ -114,7 +114,7 @@ class I2CDevice:
         """
         if len(data) not in (1, 2):
             raise ValueError("Data must be 1 or 2 bytes.")
-        self.bus.write_i2c_block_data(self.device_address, register, list(data))
+        self.bus.write_i2c_block_data(self.device_address, register, data)
 
     def __probe_for_device(self) -> None:
         """

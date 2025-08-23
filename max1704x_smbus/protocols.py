@@ -1,8 +1,9 @@
 """Protocol definitions used for static type checking."""
 
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
-from .i2c_device import I2CDevice
+if TYPE_CHECKING:
+    from .i2c_device import I2CDevice
 
 
 class I2CDeviceDriver(Protocol):
@@ -15,4 +16,4 @@ class I2CDeviceDriver(Protocol):
         Underlying I2C communication interface.
     """
 
-    i2c_device: I2CDevice
+    i2c_device: "I2CDevice"

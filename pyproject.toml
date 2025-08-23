@@ -44,7 +44,8 @@ Issues = "https://github.com/Tuxt/MAX17048-smbus/issues"
 
 [project.optional-dependencies]
 dev = [
-  "ruff>=0.12.7"
+  "ruff>=0.12.7",
+  "pytest>=8.4.1",
 ]
 smbus = ["smbus"]
 smbus2 = ["smbus2"]

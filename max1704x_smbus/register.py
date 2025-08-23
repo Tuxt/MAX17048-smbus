@@ -161,6 +161,9 @@ class RegisterField:
         self.signed = signed
         self.read_only = read_only
 
+        bit_limit = 1 << num_bits
+        self._bounds = (-bit_limit // 2, bit_limit // 2) if signed else (0, bit_limit)
+
     def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
         """
         Read the current field value from the register.
@@ -207,6 +210,10 @@ class RegisterField:
         """
         if self.read_only:
             raise AttributeError("Cannot write to read-only register field")
+        if not (self._bounds[0] <= value < self._bounds[1]):
+            raise OverflowError(
+                f"Value {value} out of range for {'' if self.signed else 'un'}signed {self.num_bits}-bit integer"
+            )
         if self.signed:
             value = self._convert_signed_unsigned(value, self.num_bits, unsigned_to_signed=False)
 

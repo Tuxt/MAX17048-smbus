@@ -579,9 +579,7 @@ class MAX17048:
         See Also
         --------
         :py:meth:`hibernate`
-            Force the device into hibernation.
         :py:meth:`wake`
-            Exit hibernation.
         """
         return bool(self._hibernating)
 

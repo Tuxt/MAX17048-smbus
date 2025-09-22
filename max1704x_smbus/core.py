@@ -56,7 +56,7 @@ class MAX17048:
         Current cell voltage in volts (read-only).
     cell_percent : float
         State-of-charge (SOC) as a percentage (read-only).
-    hibernating : int
+    hibernating : bool
         ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
     enable_sleep : int
         Enable or disable the device sleep mode (read/write).
@@ -126,7 +126,7 @@ class MAX17048:
     # [0x04] SOC        RO
     _cell_soc = RORegister(_MAX1704X_SOC_REG, used_bytes=USED_BYTES_BOTH)
     # [0x06] MODE       WO  Default: 0x0000
-    hibernating = ROBit(_MAX1704X_MODE_REG, bit=4)
+    _hibernating = ROBit(_MAX1704X_MODE_REG, bit=4)
     enable_sleep = RWBit(_MAX1704X_MODE_REG, bit=5)
     quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
     # [0x08] VERSION    RO  Default: 0x001_
@@ -418,6 +418,35 @@ class MAX17048:
         :py:const:`ALERTFLAG_RESET_INDICATOR`
         """
         return self._status & 0x3F
+
+    @property
+    def hibernating(self) -> bool:
+        """
+        Whether the device is currently in hibernation.
+
+        Read the device hibernation status. Returns ``True`` when the hardware
+        reports it is in hibernation mode (the bit named ``HibStat`` in the
+        device datasheet).
+
+        Returns
+        -------
+        bool
+            ``True`` if the device is in hibernation, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``HibStat`` bit in the ``MODE`` register.
+        This property is read-only. Use :py:meth:`hibernate` or :py:meth:`wake`
+        to change the device state.
+
+        See Also
+        --------
+        :py:meth:`hibernate`
+            Force the device into hibernation.
+        :py:meth:`wake`
+            Exit hibernation.
+        """
+        return bool(self._hibernating)
 
     @property
     def activity_threshold(self) -> float:

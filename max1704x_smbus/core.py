@@ -60,8 +60,6 @@ class MAX17048:
         ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
     enable_sleep : bool
         Enable or disable the device sleep mode (read/write).
-    quick_start : int
-        Trigger a quick-start estimation of OCV/SOC (write-only in practice).
     chip_version : int
         Raw chip version register (read-only).
     hibernation_threshold : float
@@ -115,6 +113,8 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
+    quick_start() -> None
+        Trigger a quick-start estimation of OCV/SOC.
     hibernate() -> None
         Force the device into hibernation mode immediately.
     wake() -> None
@@ -128,7 +128,7 @@ class MAX17048:
     # [0x06] MODE       WO  Default: 0x0000
     _hibernating = ROBit(_MAX1704X_MODE_REG, bit=4)
     _enable_sleep = RWBit(_MAX1704X_MODE_REG, bit=5)
-    quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
+    _quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
     # [0x08] VERSION    RO  Default: 0x001_
     chip_version = RORegister(_MAX1704X_VERSION_REG, used_bytes=USED_BYTES_BOTH)
     # [0x0A] HIBRT      RW  Default: 0x8030
@@ -418,6 +418,21 @@ class MAX17048:
         :py:const:`ALERTFLAG_RESET_INDICATOR`
         """
         return self._status & 0x3F
+
+    def quick_start(self) -> None:
+        """
+        Trigger a quick-start estimation of OCV and SOC.
+
+        Initiates a recalculation of open-circuit voltage (OCV) and
+        state-of-charge (SOC) based on the instantaneous cell voltage.
+
+        Notes
+        -----
+        This method sets the ``Quick-Start`` bit in the ``MODE`` register to
+        trigger a recalculation. Use with caution; see the *Quick-Start* section
+        of the datasheet for details.
+        """
+        self._quick_start = 1
 
     @property
     def enable_sleep(self) -> bool:

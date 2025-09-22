@@ -113,9 +113,11 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
-    def clear_voltage_alert_max(self) -> None
+    clear_voltage_alert_max() -> None
         Clear the voltage high (VH) flag in the ``STATUS`` register.
-    clear_voltage_reset_alert(self) -> None
+    clear_voltage_alert_min() -> None
+        Clear the voltage low (VL) flag in the ``STATUS`` register.
+    clear_voltage_reset_alert() -> None
         Clear the voltage reset (VR) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.

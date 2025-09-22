@@ -94,8 +94,8 @@ class MAX17048:
         Chip ID register (read-only).
     alert_reason : int
         Bitmask of currently active alert causes (read-only).
-    reset_alert : int
-        Reset alert flag (read-write).
+    reset_indicator : bool
+        Reset alert flag (read-only).
     voltage_high_alert : int
         Voltage-high alert flag (read-write).
     voltage_low_alert : int
@@ -113,6 +113,8 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
+    clear_reset_indicator() -> None
+        Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
         Trigger a quick-start estimation of OCV/SOC.
     hibernate() -> None
@@ -151,7 +153,7 @@ class MAX17048:
     chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     # [0x1A] STATUS     RW  Default: 0x01__
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
-    reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
+    _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
     voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
     voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
@@ -214,7 +216,7 @@ class MAX17048:
             raise RuntimeError("Reset did not succeed")
 
         try:
-            self.reset_alert = False  # Clean up RI alert
+            self.clear_reset_indicator()  # Clean up RI alert
         except OSError as e:
             raise RuntimeError("Clearing reset alert did not succeed") from e
 
@@ -446,6 +448,52 @@ class MAX17048:
         :py:const:`ALERTFLAG_RESET_INDICATOR`
         """
         return self._status & 0x3F
+
+    @property
+    def reset_indicator(self) -> bool:
+        """
+        Reset indicator flag.
+
+        Indicates whether the device has recently powered up or reset and
+        still requires configuration. A value of ``True`` means the IC is
+        signaling that initialization is pending. ``False`` means the device
+        has already been configured and the flag has been cleared.
+
+        Returns
+        -------
+        bool
+            ``True`` if the reset indicator (RI) flag is set,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``RI`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`clear_reset_indicator` to
+        acknowledge and clear the flag.
+
+        See Also
+        --------
+        :py:meth:`clear_reset_indicator`
+        """
+        return bool(self._reset_indicator)
+
+    def clear_reset_indicator(self) -> None:
+        """
+        Clear the reset indicator flag.
+
+        Acknowledges that the device has been configured after a reset or
+        power-up event by clearing the ``RI`` bit in the ``STATUS`` register.
+
+        Notes
+        -----
+        This method explicitly writes ``0`` to the ``RI`` flag. The bit is
+        set automatically by the device after power-up or reset.
+
+        See Also
+        --------
+        :py:attr:`reset_indicator`
+        """
+        self._reset_indicator = 0
 
     def quick_start(self) -> None:
         """

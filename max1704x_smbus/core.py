@@ -58,7 +58,7 @@ class MAX17048:
         State-of-charge (SOC) as a percentage (read-only).
     hibernating : bool
         ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
-    enable_sleep : int
+    enable_sleep : bool
         Enable or disable the device sleep mode (read/write).
     quick_start : int
         Trigger a quick-start estimation of OCV/SOC (write-only in practice).
@@ -127,7 +127,7 @@ class MAX17048:
     _cell_soc = RORegister(_MAX1704X_SOC_REG, used_bytes=USED_BYTES_BOTH)
     # [0x06] MODE       WO  Default: 0x0000
     _hibernating = ROBit(_MAX1704X_MODE_REG, bit=4)
-    enable_sleep = RWBit(_MAX1704X_MODE_REG, bit=5)
+    _enable_sleep = RWBit(_MAX1704X_MODE_REG, bit=5)
     quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
     # [0x08] VERSION    RO  Default: 0x001_
     chip_version = RORegister(_MAX1704X_VERSION_REG, used_bytes=USED_BYTES_BOTH)
@@ -418,6 +418,27 @@ class MAX17048:
         :py:const:`ALERTFLAG_RESET_INDICATOR`
         """
         return self._status & 0x3F
+
+    @property
+    def enable_sleep(self) -> bool:
+        """
+        Enable or disable sleep mode.
+
+        Returns
+        -------
+        bool
+            ``True`` if sleep mode is enabled, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``EnSleep`` bit in the ``MODE`` register
+        (read/write).
+        """
+        return bool(self._enable_sleep)
+
+    @enable_sleep.setter
+    def enable_sleep(self, enabled: bool) -> None:
+        self._enable_sleep = int(enabled)
 
     @property
     def hibernating(self) -> bool:

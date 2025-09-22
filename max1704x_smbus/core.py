@@ -88,7 +88,7 @@ class MAX17048:
     reset_voltage : float
         Voltage threshold used to detect battery removal / reinsertion
         (read-write).
-    comparator_disabled : int
+    comparator_disabled : bool
         Disable the analog comparator while in hibernation (read-write).
     chip_id : int
         Chip ID register (read-only).
@@ -147,7 +147,7 @@ class MAX17048:
     _cell_crate = RORegister(_MAX1704X_CRATE_REG, used_bytes=USED_BYTES_BOTH, signed=True)
     # [0x18] VRESET/ID  RW  Default: 0x96__
     _reset_voltage = RegisterField(_MAX1704X_VRESET_ID_REG, num_bits=7, lowest_bit=9, independent_bytes=True)
-    comparator_disabled = RWBit(_MAX1704X_VRESET_ID_REG, bit=8, independent_bytes=True)
+    _comparator_disabled = RWBit(_MAX1704X_VRESET_ID_REG, bit=8, independent_bytes=True)
     chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     # [0x1A] STATUS     RW  Default: 0x01__
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
@@ -280,6 +280,34 @@ class MAX17048:
         if not 0 <= vreset <= (127 * 0.04):
             raise ValueError("Reset voltage must be between 0 and 5.1V")
         self._reset_voltage = int(vreset / 0.04)  # 40 mV steps
+
+    @property
+    def comparator_disabled(self) -> bool:
+        """
+        Control whether the analog comparator for ``VRESET`` is disabled.
+
+        When set to ``True``, the analog comparator (used to detect battery
+        removal and reinsertion) is disabled during hibernate mode, reducing
+        supply current by about 0.5 µA. When ``False``, the comparator
+        remains enabled.
+
+        Returns
+        -------
+        bool
+            ``True`` if the comparator is disabled in hibernate mode,
+            ``False`` if enabled.
+
+        Notes
+        -----
+        Corresponds to the ``Dis`` bit in the ``VRESET/ID`` register.
+        See the *VRESET* section of the datasheet for details on threshold
+        adjustment and reset timing behavior.
+        """
+        return bool(self._comparator_disabled)
+
+    @comparator_disabled.setter
+    def comparator_disabled(self, disabled: bool) -> None:
+        self._comparator_disabled = int(disabled)
 
     @property
     def voltage_alert_min(self) -> float:

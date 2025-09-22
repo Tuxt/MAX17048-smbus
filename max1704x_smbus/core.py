@@ -98,8 +98,8 @@ class MAX17048:
         Reset alert flag (read-only).
     voltage_high_alert : bool
         Voltage-high alert flag (read-only).
-    voltage_low_alert : int
-        Voltage-low alert flag (read-write).
+    voltage_low_alert : bool
+        Voltage-low alert flag (read-only).
     voltage_reset_alert : int
         Voltage-reset alert flag (read-write).
     soc_low_alert : int
@@ -157,7 +157,7 @@ class MAX17048:
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
     _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
     _voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
-    voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
+    _voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
     soc_change_alert = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
@@ -418,6 +418,44 @@ class MAX17048:
         """
         self._voltage_high_alert = 0
     
+    @property
+    def voltage_low_alert(self) -> bool:
+        """
+        Voltage low flag.
+
+        Indicates whether the low voltage alert is active. ``True`` means the cell
+        voltage has fallen below the threshold set in :py:attr:`voltage_alert_min`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage has fallen below the threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VL`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`clear_voltage_alert_min` to
+        clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`voltage_alert_min`
+        :py:meth:`clear_voltage_alert_min`
+        """
+        return bool(self._voltage_low_alert)
+    
+    def clear_voltage_alert_min(self) -> None:
+        """
+        Clear the voltage low flag.
+
+        Clear the ``VL`` (voltage low) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`voltage_low_alert`
+        """
+        self._voltage_low_alert = 0
 
     @property
     def active_alert(self) -> bool:

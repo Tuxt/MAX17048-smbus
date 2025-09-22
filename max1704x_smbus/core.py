@@ -70,7 +70,7 @@ class MAX17048:
     rcomp : int
         RCOMP configuration to tune compensation for different battery types
         (read-write).
-    sleep : int
+    sleep : bool
         Forces the IC in or out of sleep mode (if `enable_sleep`) (read-write)
     enable_soc_change_alert : bool
         Enable/disable SOC change alerts (≥1% variation) (read-write).
@@ -136,7 +136,7 @@ class MAX17048:
     _hibrt_hibthr = RWRegister(_MAX1704X_HIBRT_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
     # [0x0C] CONFIG     RW  Default: 0x971C
     rcomp = RWRegister(_MAX1704X_CONFIG_REG, used_bytes=USED_BYTES_MSB)
-    sleep = RWBit(_MAX1704X_CONFIG_REG, bit=7)
+    _sleep = RWBit(_MAX1704X_CONFIG_REG, bit=7)
     _alsc = RWBit(_MAX1704X_CONFIG_REG, bit=6)
     _alert_status = RWBit(_MAX1704X_CONFIG_REG, bit=5)
     _athd = RegisterField(_MAX1704X_CONFIG_REG, num_bits=5, lowest_bit=0)
@@ -454,6 +454,31 @@ class MAX17048:
     @enable_sleep.setter
     def enable_sleep(self, enabled: bool) -> None:
         self._enable_sleep = int(enabled)
+
+    @property
+    def sleep(self) -> bool:
+        """
+        Control whether the IC is forced into sleep mode.
+
+        Writing ``True`` forces the device into sleep mode, and ``False``
+        forces it to exit. This control is effective only if
+        :py:attr:`enable_sleep` is enabled.
+
+        Returns
+        -------
+        bool
+            ``True`` if forcing the device into sleep mode, ``False`` if
+            forcing exit.
+
+        Notes
+        -----
+        Corresponds to the ``SLEEP`` bit in the ``CONFIG`` register.
+        """
+        return bool(self._sleep)
+
+    @sleep.setter
+    def sleep(self, sleep: bool) -> None:
+        self._sleep = int(sleep)
 
     @property
     def hibernating(self) -> bool:

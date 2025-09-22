@@ -100,8 +100,8 @@ class MAX17048:
         Voltage-high alert flag (read-only).
     voltage_low_alert : bool
         Voltage-low alert flag (read-only).
-    voltage_reset_alert : int
-        Voltage-reset alert flag (read-write).
+    voltage_reset_alert : bool
+        Voltage-reset alert flag (read-only).
     soc_low_alert : int
         SOC-low alert flag (read/write).
     soc_change_alert : int
@@ -115,6 +115,8 @@ class MAX17048:
         Clear the global alert flag (and deassert the ALRT pin).
     def clear_voltage_alert_max(self) -> None
         Clear the voltage high (VH) flag in the ``STATUS`` register.
+    clear_voltage_reset_alert(self) -> None
+        Clear the voltage reset (VR) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
@@ -158,7 +160,7 @@ class MAX17048:
     _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
     _voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
     _voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
-    voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
+    _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
     soc_change_alert = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
     # [0xFE] CMD        RW  Default: 0xFFFF
@@ -456,6 +458,45 @@ class MAX17048:
         :py:attr:`voltage_low_alert`
         """
         self._voltage_low_alert = 0
+
+    @property
+    def voltage_reset_alert(self) -> bool:
+        """
+        Voltage reset flag.
+
+        Indicates whether the cell voltage dropped below and subsequently
+        risen above the :py:attr:`reset_voltage` threshold.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage dropped below and then rose above the
+            configured reset threshold, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VR`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`clear_voltage_reset_alert`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`reset_voltage`
+        :py:meth:`clear_voltage_reset_alert`
+        """
+        return bool(self._voltage_reset_alert)
+    
+    def clear_voltage_reset_alert(self) -> None:
+        """
+        Clear the voltage reset flag.
+
+        Clear the ``VR`` (voltage reset) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`voltage_reset_alert`
+        """
+        self._voltage_reset_alert = 0
 
     @property
     def active_alert(self) -> bool:

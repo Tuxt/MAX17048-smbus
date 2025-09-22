@@ -96,8 +96,8 @@ class MAX17048:
         Bitmask of currently active alert causes (read-only).
     reset_indicator : bool
         Reset alert flag (read-only).
-    voltage_high_alert : int
-        Voltage-high alert flag (read-write).
+    voltage_high_alert : bool
+        Voltage-high alert flag (read-only).
     voltage_low_alert : int
         Voltage-low alert flag (read-write).
     voltage_reset_alert : int
@@ -113,6 +113,8 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
+    def clear_voltage_alert_max(self) -> None
+        Clear the voltage high (VH) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
@@ -154,7 +156,7 @@ class MAX17048:
     # [0x1A] STATUS     RW  Default: 0x01__
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
     _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
-    voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
+    _voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
     voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
@@ -376,6 +378,46 @@ class MAX17048:
     @enable_soc_change_alert.setter
     def enable_soc_change_alert(self, enabled: bool) -> None:
         self._alsc = int(enabled)
+
+    @property
+    def voltage_high_alert(self) -> bool:
+        """
+        Voltage high flag.
+
+        Indicates whether the high voltage alert is active. ``True`` means the
+        cell voltage has exceeded the threshold set in :py:attr:`voltage_alert_max`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage has exceeded the threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VH`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`clear_voltage_alert_max` to
+        clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`voltage_alert_max`
+        :py:meth:`clear_voltage_alert_max`
+        """
+        return bool(self._voltage_high_alert)
+
+    def clear_voltage_alert_max(self) -> None:
+        """
+        Clear the voltage high flag.
+
+        Clear the ``VH`` (voltage high) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`voltage_high_alert`
+        """
+        self._voltage_high_alert = 0
+    
 
     @property
     def active_alert(self) -> bool:

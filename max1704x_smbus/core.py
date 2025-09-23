@@ -38,7 +38,7 @@ ALERTFLAG_VOLTAGE_LOW = 0x04
 ALERTFLAG_VOLTAGE_HIGH = 0x02
 ALERTFLAG_RESET_INDICATOR = 0x01
 
-# TODO: Wrap STATUS/CONFIG flag bits into boolean properties instead of exposing raw ints
+
 # TODO: Reorder attributes and methods by functional groups
 # TODO: Add See Also sections to group related hibernation and alert properties
 # TODO: Review/Rename attribute/property naming for consistency

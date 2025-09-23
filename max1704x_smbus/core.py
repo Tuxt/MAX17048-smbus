@@ -4,6 +4,7 @@ Core driver for the MAX17048 fuel gauge.
 This module defines the :class:`MAX17048` driver class, along with
 constants for interpreting alert flags from the device.
 """
+
 from .i2c_device import I2CDevice
 from .register import (
     USED_BYTES_BOTH,
@@ -276,7 +277,7 @@ class MAX17048:
         Reset threshold voltage.
 
         Cell voltage threshold at which the device considers a battery removal
-        or reinsertion. 
+        or reinsertion.
 
         Returns
         -------
@@ -333,7 +334,7 @@ class MAX17048:
         -------
         float
             Lower-limit threshold in volts, between 0 and 5.1 V.
-        
+
         Raises
         ------
         :py:exc:`ValueError`
@@ -428,7 +429,7 @@ class MAX17048:
         :py:attr:`voltage_high_alert`
         """
         self._voltage_high_alert = 0
-    
+
     @property
     def voltage_low_alert(self) -> bool:
         """
@@ -455,7 +456,7 @@ class MAX17048:
         :py:meth:`clear_voltage_alert_min`
         """
         return bool(self._voltage_low_alert)
-    
+
     def clear_voltage_alert_min(self) -> None:
         """
         Clear the voltage low flag.
@@ -494,7 +495,7 @@ class MAX17048:
         :py:meth:`clear_voltage_reset_alert`
         """
         return bool(self._voltage_reset_alert)
-    
+
     def clear_voltage_reset_alert(self) -> None:
         """
         Clear the voltage reset flag.
@@ -544,7 +545,7 @@ class MAX17048:
         :py:attr:`soc_low_alert`
         """
         self._soc_low_alert = 0
-    
+
     @property
     def soc_change_alert(self) -> bool:
         """
@@ -595,7 +596,7 @@ class MAX17048:
 
         """
         return bool(self._alert_status)
-    
+
     def clear_alert(self) -> None:
         """
         Clear the global alert flag and deassert the ``ALRT`` pin.
@@ -700,7 +701,7 @@ class MAX17048:
         :py:attr:`reset_indicator`
         """
         self._reset_indicator = 0
-    
+
     @property
     def enable_voltage_reset_alert(self) -> bool:
         """

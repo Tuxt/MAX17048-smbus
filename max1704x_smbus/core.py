@@ -106,6 +106,8 @@ class MAX17048:
         SOC-low alert flag (read-only).
     soc_change_alert : bool
         SOC-change alert flag (read-only).
+    enable_voltage_reset_alert : bool
+        Enable/disable voltage reset alerts (read-write).
 
     Methods
     -------
@@ -169,6 +171,7 @@ class MAX17048:
     _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     _soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
     _soc_change_alert = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
+    _envr = RWBit(_MAX1704X_STATUS_REG, bit=14, independent_bytes=True)
     # [0xFE] CMD        RW  Default: 0xFFFF
     _cmd = RWRegister(_MAX1704X_CMD_REG, used_bytes=USED_BYTES_BOTH)
 
@@ -697,6 +700,32 @@ class MAX17048:
         :py:attr:`reset_indicator`
         """
         self._reset_indicator = 0
+    
+    @property
+    def enable_voltage_reset_alert(self) -> bool:
+        """
+        Enable or disable voltage reset alert.
+
+        Returns
+        -------
+        bool
+            ``True`` if voltage reset alert is enabled, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``EnVr`` bit in the ``STATUS`` register
+        (read/write).
+
+        See Also
+        --------
+        :py:attr:`reset_voltage`
+        :py:meth:`clear_voltage_reset_alert`
+        """
+        return bool(self._envr)
+
+    @enable_voltage_reset_alert.setter
+    def enable_voltage_reset_alert(self, enabled: bool) -> None:
+        self._envr = int(enabled)
 
     def quick_start(self) -> None:
         """

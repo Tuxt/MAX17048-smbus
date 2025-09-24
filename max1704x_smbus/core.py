@@ -99,8 +99,6 @@ class MAX17048:
         Voltage-low alert flag (read-only).
     voltage_reset_alert : bool
         Voltage-reset alert flag (read-only).
-    soc_low_alert : bool
-        SOC-low alert flag (read-only).
     enable_voltage_reset_alert : bool
         Enable/disable voltage reset alerts (read-write).
     alert_soc_change_enable : bool
@@ -109,6 +107,8 @@ class MAX17048:
         SOC-change alert flag (read-only).
     alert_soc_low_threshold : int
         SOC percentage threshold that triggers a low-SOC alert (read-write).
+    alert_soc_low_flag : bool
+        SOC-low alert flag (read-only).
 
     Methods
     -------
@@ -170,7 +170,7 @@ class MAX17048:
     _voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
     _voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
-    _soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
+    _hd = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
     _sc = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
     _envr = RWBit(_MAX1704X_STATUS_REG, bit=14, independent_bytes=True)
     # [0xFE] CMD        RW  Default: 0xFFFF
@@ -488,32 +488,6 @@ class MAX17048:
         :py:attr:`voltage_reset_alert`
         """
         self._voltage_reset_alert = 0
-
-    @property
-    def soc_low_alert(self) -> bool:
-        """
-        SOC low flag.
-
-        Indicates whether SOC crosses the :py:attr:`alert_soc_low_threshold`.
-
-        Returns
-        -------
-        bool
-            ``True`` if SOC crossed the configured threshold,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``HD`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`alert_soc_low_flag_clear`
-        to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_soc_low_threshold`
-        :py:meth:`alert_soc_low_flag_clear`
-        """
-        return bool(self._soc_low_alert)
 
     @property
     def active_alert(self) -> bool:
@@ -921,6 +895,32 @@ class MAX17048:
             raise ValueError("SOC alert threshold must be between 1 and 32%")
         self._athd = 32 - percent_alert_threshold
 
+    @property
+    def alert_soc_low_flag(self) -> bool:
+        """
+        SOC low flag.
+
+        Indicates whether SOC crosses the :py:attr:`alert_soc_low_threshold`.
+
+        Returns
+        -------
+        bool
+            ``True`` if SOC crossed the configured threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``HD`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_soc_low_flag_clear`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_low_threshold`
+        :py:meth:`alert_soc_low_flag_clear`
+        """
+        return bool(self._hd)
+
     def alert_soc_low_flag_clear(self) -> None:
         """
         Clear the SOC low flag.
@@ -929,6 +929,6 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`soc_low_alert`
+        :py:attr:`alert_soc_low_flag`
         """
-        self._soc_low_alert = 0
+        self._hd = 0

@@ -73,8 +73,6 @@ class MAX17048:
         (read-write).
     sleep : bool
         Forces the IC in or out of sleep mode (if `enable_sleep`) (read-write)
-    alert_soc_change_enable : bool
-        Enable/disable SOC change alerts (≥1% variation) (read-write).
     active_alert : bool
         ``True`` if any alert is currently active, ``False`` otherwise
         (read-only).
@@ -105,10 +103,12 @@ class MAX17048:
         Voltage-reset alert flag (read-only).
     soc_low_alert : bool
         SOC-low alert flag (read-only).
-    soc_change_alert : bool
-        SOC-change alert flag (read-only).
     enable_voltage_reset_alert : bool
         Enable/disable voltage reset alerts (read-write).
+    alert_soc_change_enable : bool
+        Enable/disable SOC change alerts (≥1% variation) (read-write).
+    alert_soc_change_flag : bool
+        SOC-change alert flag (read-only).
 
     Methods
     -------
@@ -124,8 +124,6 @@ class MAX17048:
         Clear the voltage reset (VR) flag in the ``STATUS`` register.
     clear_soc_low_alert() -> None
         Clear the SOC low (HD) flag in the ``STATUS`` register.
-    alert_soc_change_flag_clear() -> None
-        Clear the SOC change (SC) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
@@ -134,6 +132,8 @@ class MAX17048:
         Force the device into hibernation mode immediately.
     wake() -> None
         Wake the device from hibernation mode immediately.
+    alert_soc_change_flag_clear() -> None
+        Clear the SOC change (SC) flag in the ``STATUS`` register.
     """
 
     # [0x02] VCELL      RO
@@ -171,7 +171,7 @@ class MAX17048:
     _voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     _soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
-    _soc_change_alert = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
+    _sc = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
     _envr = RWBit(_MAX1704X_STATUS_REG, bit=14, independent_bytes=True)
     # [0xFE] CMD        RW  Default: 0xFFFF
     _cmd = RWRegister(_MAX1704X_CMD_REG, used_bytes=USED_BYTES_BOTH)
@@ -526,32 +526,6 @@ class MAX17048:
         :py:attr:`soc_low_alert`
         """
         self._soc_low_alert = 0
-
-    @property
-    def soc_change_alert(self) -> bool:
-        """
-        SOC change flag.
-
-        Indicates whether SOC has changed at least 1% (if enabled).
-
-        Returns
-        -------
-        bool
-            ``True`` if SOC changed at least 1%,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``SC`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`alert_soc_change_flag_clear`
-        to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_soc_change_enable`
-        :py:meth:`alert_soc_change_flag_clear`
-        """
-        return bool(self._soc_change_alert)
 
     @property
     def active_alert(self) -> bool:
@@ -920,6 +894,32 @@ class MAX17048:
     def alert_soc_change_enable(self, enabled: bool) -> None:
         self._alsc = int(enabled)
 
+    @property
+    def alert_soc_change_flag(self) -> bool:
+        """
+        SOC change flag.
+
+        Indicates whether SOC has changed at least 1% (if enabled).
+
+        Returns
+        -------
+        bool
+            ``True`` if SOC changed at least 1%,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``SC`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_soc_change_flag_clear`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_change_enable`
+        :py:meth:`alert_soc_change_flag_clear`
+        """
+        return bool(self._sc)
+
     def alert_soc_change_flag_clear(self) -> None:
         """
         Clear the SOC change flag.
@@ -928,6 +928,6 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`soc_change_alert`
+        :py:attr:`alert_soc_change_flag`
         """
-        self._soc_change_alert = 0
+        self._sc = 0

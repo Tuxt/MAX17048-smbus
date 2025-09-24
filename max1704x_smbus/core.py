@@ -78,8 +78,6 @@ class MAX17048:
         (read-only).
     voltage_alert_min : float
         Lower voltage threshold that triggers a voltage alert (read-write).
-    voltage_alert_max : float
-        Upper voltage threshold that triggers a voltage alert (read-write).
     charge_rate : float
         Estimated charge/discharge rate in percent per hour (read-only).
     reset_voltage : float
@@ -107,6 +105,8 @@ class MAX17048:
         SOC percentage threshold that triggers a low-SOC alert (read-write).
     alert_soc_low_flag : bool
         SOC-low alert flag (read-only).
+    alert_voltage_high_threshold : float
+        Upper voltage threshold that triggers a voltage alert (read-write).
     alert_voltage_high_flag : bool
         Voltage-high alert flag (read-only).
 
@@ -347,30 +347,6 @@ class MAX17048:
         if not 0 <= valert_min <= (255 * 0.02):
             raise ValueError("Alert voltage must be between 0 and 5.1V")
         self._valrt_min = int(valert_min / 0.02)
-
-    @property
-    def voltage_alert_max(self) -> float:
-        """The upper-limit voltage for the voltage alert."""
-        """
-        Maximum voltage threshold for triggering a voltage alert.
-
-        Returns
-        -------
-        float
-            Upper-limit threshold in volts, between 0 and 5.1 V.
-        
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return self._valrt_max * 0.02  # 20 mV steps
-
-    @voltage_alert_max.setter
-    def voltage_alert_max(self, valert_max: float) -> None:
-        if not 0 <= valert_max <= (255 * 0.02):
-            raise ValueError("Alert voltage must be between 0 and 5.1V")
-        self._valrt_max = int(valert_max / 0.02)
 
     @property
     def voltage_low_alert(self) -> bool:
@@ -896,12 +872,36 @@ class MAX17048:
 
     # Voltage High
     @property
+    def alert_voltage_high_threshold(self) -> float:
+        """The upper-limit voltage for the voltage alert."""
+        """
+        Maximum voltage threshold for triggering a voltage alert.
+
+        Returns
+        -------
+        float
+            Upper-limit threshold in volts, between 0 and 5.1 V.
+        
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return self._valrt_max * 0.02  # 20 mV steps
+
+    @alert_voltage_high_threshold.setter
+    def alert_voltage_high_threshold(self, valert_max: float) -> None:
+        if not 0 <= valert_max <= (255 * 0.02):
+            raise ValueError("Alert voltage must be between 0 and 5.1V")
+        self._valrt_max = int(valert_max / 0.02)
+
+    @property
     def alert_voltage_high_flag(self) -> bool:
         """
         Voltage high flag.
 
         Indicates whether the high voltage alert is active. ``True`` means the
-        cell voltage has exceeded the threshold set in :py:attr:`voltage_alert_max`.
+        cell voltage has exceeded the threshold set in :py:attr:`alert_voltage_high_threshold`.
 
         Returns
         -------
@@ -917,7 +917,7 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`voltage_alert_max`
+        :py:attr:`alert_voltage_high_threshold`
         :py:meth:`alert_voltage_high_flag_clear`
         """
         return bool(self._vh)

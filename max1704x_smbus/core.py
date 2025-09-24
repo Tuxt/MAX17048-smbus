@@ -76,8 +76,6 @@ class MAX17048:
     active_alert : bool
         ``True`` if any alert is currently active, ``False`` otherwise
         (read-only).
-    low_soc_alert_threshold : int
-        SOC percentage threshold that triggers a low-SOC alert (read-write).
     voltage_alert_min : float
         Lower voltage threshold that triggers a voltage alert (read-write).
     voltage_alert_max : float
@@ -109,6 +107,8 @@ class MAX17048:
         Enable/disable SOC change alerts (≥1% variation) (read-write).
     alert_soc_change_flag : bool
         SOC-change alert flag (read-only).
+    alert_soc_low_threshold : int
+        SOC percentage threshold that triggers a low-SOC alert (read-write).
 
     Methods
     -------
@@ -494,7 +494,7 @@ class MAX17048:
         """
         SOC low flag.
 
-        Indicates whether SOC crosses the :py:attr:`low_soc_alert_threshold`.
+        Indicates whether SOC crosses the :py:attr:`alert_soc_low_threshold`.
 
         Returns
         -------
@@ -510,7 +510,7 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`low_soc_alert_threshold`
+        :py:attr:`alert_soc_low_threshold`
         :py:meth:`clear_soc_low_alert`
         """
         return bool(self._soc_low_alert)
@@ -549,32 +549,6 @@ class MAX17048:
         condition is triggered.
         """
         self._alert_status = 0
-
-    @property
-    def low_soc_alert_threshold(self) -> int:
-        """
-        Low-SOC alert threshold.
-
-        Defines the state-of-charge (SOC) percentage below which the
-        device asserts an alert condition.
-
-        Returns
-        -------
-        int
-            Threshold in percent, between 1 and 32%.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return 32 - self._athd
-
-    @low_soc_alert_threshold.setter
-    def low_soc_alert_threshold(self, percent_alert_threshold: int) -> None:
-        if not 0 < percent_alert_threshold <= 32:
-            raise ValueError("SOC alert threshold must be between 1 and 32%")
-        self._athd = 32 - percent_alert_threshold
 
     @property
     def alert_reason(self) -> int:
@@ -931,3 +905,30 @@ class MAX17048:
         :py:attr:`alert_soc_change_flag`
         """
         self._sc = 0
+
+    # Low SoC
+    @property
+    def alert_soc_low_threshold(self) -> int:
+        """
+        Low-SOC alert threshold.
+
+        Defines the state-of-charge (SOC) percentage below which the
+        device asserts an alert condition.
+
+        Returns
+        -------
+        int
+            Threshold in percent, between 1 and 32%.
+
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return 32 - self._athd
+
+    @alert_soc_low_threshold.setter
+    def alert_soc_low_threshold(self, percent_alert_threshold: int) -> None:
+        if not 0 < percent_alert_threshold <= 32:
+            raise ValueError("SOC alert threshold must be between 1 and 32%")
+        self._athd = 32 - percent_alert_threshold

@@ -124,7 +124,7 @@ class MAX17048:
         Clear the voltage reset (VR) flag in the ``STATUS`` register.
     clear_soc_low_alert() -> None
         Clear the SOC low (HD) flag in the ``STATUS`` register.
-    clear_soc_change_alert() -> None
+    alert_soc_change_flag_clear() -> None
         Clear the SOC change (SC) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.
@@ -543,27 +543,15 @@ class MAX17048:
         Notes
         -----
         Corresponds to the ``SC`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_soc_change_alert`
+        property is read-only. Use :py:meth:`alert_soc_change_flag_clear`
         to clear the flag after handling the alert.
 
         See Also
         --------
         :py:attr:`alert_soc_change_enable`
-        :py:meth:`clear_soc_change_alert`
+        :py:meth:`alert_soc_change_flag_clear`
         """
         return bool(self._soc_change_alert)
-
-    def clear_soc_change_alert(self) -> None:
-        """
-        Clear the SOC change flag.
-
-        Clear the ``SC`` (SOC change) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`soc_change_alert`
-        """
-        self._soc_change_alert = 0
 
     @property
     def active_alert(self) -> bool:
@@ -931,3 +919,15 @@ class MAX17048:
     @alert_soc_change_enable.setter
     def alert_soc_change_enable(self, enabled: bool) -> None:
         self._alsc = int(enabled)
+
+    def alert_soc_change_flag_clear(self) -> None:
+        """
+        Clear the SOC change flag.
+
+        Clear the ``SC`` (SOC change) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`soc_change_alert`
+        """
+        self._soc_change_alert = 0

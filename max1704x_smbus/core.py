@@ -73,7 +73,7 @@ class MAX17048:
         (read-write).
     sleep : bool
         Forces the IC in or out of sleep mode (if `enable_sleep`) (read-write)
-    enable_soc_change_alert : bool
+    alert_soc_change_enable : bool
         Enable/disable SOC change alerts (≥1% variation) (read-write).
     active_alert : bool
         ``True`` if any alert is currently active, ``False`` otherwise
@@ -373,25 +373,6 @@ class MAX17048:
         self._valrt_max = int(valert_max / 0.02)
 
     @property
-    def enable_soc_change_alert(self) -> bool:
-        """
-        Enable or disable the state-of-charge (SOC) change alert.
-
-        When enabled, the device asserts an alert whenever the SOC changes
-        by at least 1%.
-
-        Returns
-        -------
-        bool
-            ``True`` if the SOC change alert is enabled, ``False`` otherwise.
-        """
-        return bool(self._alsc)
-
-    @enable_soc_change_alert.setter
-    def enable_soc_change_alert(self, enabled: bool) -> None:
-        self._alsc = int(enabled)
-
-    @property
     def voltage_high_alert(self) -> bool:
         """
         Voltage high flag.
@@ -567,7 +548,7 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`enable_soc_change_alert`
+        :py:attr:`alert_soc_change_enable`
         :py:meth:`clear_soc_change_alert`
         """
         return bool(self._soc_change_alert)
@@ -929,3 +910,24 @@ class MAX17048:
         """
         self._hibrt_hibthr = 0x00
         self._hibrt_actthr = 0x00
+
+    # ALERTS
+    # SoC Change
+    @property
+    def alert_soc_change_enable(self) -> bool:
+        """
+        Enable or disable the state-of-charge (SOC) change alert.
+
+        When enabled, the device asserts an alert whenever the SOC changes
+        by at least 1%.
+
+        Returns
+        -------
+        bool
+            ``True`` if the SOC change alert is enabled, ``False`` otherwise.
+        """
+        return bool(self._alsc)
+
+    @alert_soc_change_enable.setter
+    def alert_soc_change_enable(self, enabled: bool) -> None:
+        self._alsc = int(enabled)

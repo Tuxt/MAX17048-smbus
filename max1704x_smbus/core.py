@@ -91,8 +91,6 @@ class MAX17048:
         Bitmask of currently active alert causes (read-only).
     reset_indicator : bool
         Reset alert flag (read-only).
-    voltage_low_alert : bool
-        Voltage-low alert flag (read-only).
     voltage_reset_alert : bool
         Voltage-reset alert flag (read-only).
     enable_voltage_reset_alert : bool
@@ -109,6 +107,8 @@ class MAX17048:
         Upper voltage threshold that triggers a voltage alert (read-write).
     alert_voltage_high_flag : bool
         Voltage-high alert flag (read-only).
+    alert_voltage_low_flag : bool
+        Voltage-low alert flag (read-only).
 
     Methods
     -------
@@ -168,7 +168,7 @@ class MAX17048:
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
     _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
     _vh = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
-    _voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
+    _vl = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     _hd = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
     _sc = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
@@ -348,33 +348,6 @@ class MAX17048:
             raise ValueError("Alert voltage must be between 0 and 5.1V")
         self._valrt_min = int(valert_min / 0.02)
 
-    @property
-    def voltage_low_alert(self) -> bool:
-        """
-        Voltage low flag.
-
-        Indicates whether the low voltage alert is active. ``True`` means the cell
-        voltage has fallen below the threshold set in :py:attr:`voltage_alert_min`.
-
-        Returns
-        -------
-        bool
-            ``True`` if the cell voltage has fallen below the threshold,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``VL`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_voltage_alert_min` to
-        clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`voltage_alert_min`
-        :py:meth:`clear_voltage_alert_min`
-        """
-        return bool(self._voltage_low_alert)
-
     def clear_voltage_alert_min(self) -> None:
         """
         Clear the voltage low flag.
@@ -383,9 +356,9 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`voltage_low_alert`
+        :py:attr:`alert_voltage_low_flag`
         """
-        self._voltage_low_alert = 0
+        self._vl = 0
 
     @property
     def voltage_reset_alert(self) -> bool:
@@ -933,3 +906,31 @@ class MAX17048:
         :py:attr:`alert_voltage_high_flag`
         """
         self._vh = 0
+
+    # Voltage Low
+    @property
+    def alert_voltage_low_flag(self) -> bool:
+        """
+        Voltage low flag.
+
+        Indicates whether the low voltage alert is active. ``True`` means the cell
+        voltage has fallen below the threshold set in :py:attr:`voltage_alert_min`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage has fallen below the threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VL`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`clear_voltage_alert_min` to
+        clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`voltage_alert_min`
+        :py:meth:`clear_voltage_alert_min`
+        """
+        return bool(self._vl)

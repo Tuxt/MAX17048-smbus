@@ -122,8 +122,6 @@ class MAX17048:
         Clear the voltage low (VL) flag in the ``STATUS`` register.
     clear_voltage_reset_alert() -> None
         Clear the voltage reset (VR) flag in the ``STATUS`` register.
-    clear_soc_low_alert() -> None
-        Clear the SOC low (HD) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
@@ -134,6 +132,8 @@ class MAX17048:
         Wake the device from hibernation mode immediately.
     alert_soc_change_flag_clear() -> None
         Clear the SOC change (SC) flag in the ``STATUS`` register.
+    alert_soc_low_flag_clear() -> None
+        Clear the SOC low (HD) flag in the ``STATUS`` register.
     """
 
     # [0x02] VCELL      RO
@@ -505,27 +505,15 @@ class MAX17048:
         Notes
         -----
         Corresponds to the ``HD`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_soc_low_alert`
+        property is read-only. Use :py:meth:`alert_soc_low_flag_clear`
         to clear the flag after handling the alert.
 
         See Also
         --------
         :py:attr:`alert_soc_low_threshold`
-        :py:meth:`clear_soc_low_alert`
+        :py:meth:`alert_soc_low_flag_clear`
         """
         return bool(self._soc_low_alert)
-
-    def clear_soc_low_alert(self) -> None:
-        """
-        Clear the SOC low flag.
-
-        Clear the ``HD`` (SOC low) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`soc_low_alert`
-        """
-        self._soc_low_alert = 0
 
     @property
     def active_alert(self) -> bool:
@@ -932,3 +920,15 @@ class MAX17048:
         if not 0 < percent_alert_threshold <= 32:
             raise ValueError("SOC alert threshold must be between 1 and 32%")
         self._athd = 32 - percent_alert_threshold
+
+    def alert_soc_low_flag_clear(self) -> None:
+        """
+        Clear the SOC low flag.
+
+        Clear the ``HD`` (SOC low) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`soc_low_alert`
+        """
+        self._soc_low_alert = 0

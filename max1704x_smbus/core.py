@@ -115,8 +115,6 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
-    clear_voltage_reset_alert() -> None
-        Clear the voltage reset (VR) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
         Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
@@ -133,6 +131,8 @@ class MAX17048:
         Clear the voltage high (VH) flag in the ``STATUS`` register.
     alert_voltage_low_flag_clear() -> None
         Clear the voltage low (VL) flag in the ``STATUS`` register.
+    alert_voltage_reset_flag_clear() -> None
+        Clear the voltage reset (VR) flag in the ``STATUS`` register.
     """
 
     # [0x02] VCELL      RO
@@ -168,7 +168,7 @@ class MAX17048:
     _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
     _vh = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
     _vl = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
-    _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
+    _vr = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
     _hd = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
     _sc = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
     _envr = RWBit(_MAX1704X_STATUS_REG, bit=14, independent_bytes=True)
@@ -315,27 +315,15 @@ class MAX17048:
         Notes
         -----
         Corresponds to the ``VR`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_voltage_reset_alert`
+        property is read-only. Use :py:meth:`alert_voltage_reset_flag_clear`
         to clear the flag after handling the alert.
 
         See Also
         --------
         :py:attr:`alert_voltage_reset_threshold`
-        :py:meth:`clear_voltage_reset_alert`
+        :py:meth:`alert_voltage_reset_flag_clear`
         """
-        return bool(self._voltage_reset_alert)
-
-    def clear_voltage_reset_alert(self) -> None:
-        """
-        Clear the voltage reset flag.
-
-        Clear the ``VR`` (voltage reset) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`voltage_reset_alert`
-        """
-        self._voltage_reset_alert = 0
+        return bool(self._vr)
 
     @property
     def active_alert(self) -> bool:
@@ -901,7 +889,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`alert_voltage_reset_threshold`
-        :py:meth:`clear_voltage_reset_alert`
+        :py:meth:`alert_voltage_reset_flag_clear`
         """
         return bool(self._envr)
 
@@ -934,3 +922,15 @@ class MAX17048:
         if not 0 <= vreset <= (127 * 0.04):
             raise ValueError("Reset voltage must be between 0 and 5.1V")
         self._vreset = int(vreset / 0.04)  # 40 mV steps
+
+    def alert_voltage_reset_flag_clear(self) -> None:
+        """
+        Clear the voltage reset flag.
+
+        Clear the ``VR`` (voltage reset) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`voltage_reset_alert`
+        """
+        self._vr = 0

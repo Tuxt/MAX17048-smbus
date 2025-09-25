@@ -78,9 +78,6 @@ class MAX17048:
         (read-only).
     charge_rate : float
         Estimated charge/discharge rate in percent per hour (read-only).
-    reset_voltage : float
-        Voltage threshold used to detect battery removal / reinsertion
-        (read-write).
     comparator_disabled : bool
         Disable the analog comparator while in hibernation (read-write).
     chip_id : int
@@ -109,6 +106,8 @@ class MAX17048:
         Lower voltage threshold that triggers a voltage alert (read-write).
     alert_voltage_low_flag : bool
         Voltage-low alert flag (read-only).
+    alert_voltage_reset_threshold : float
+        Voltage threshold used to detect battery removal / reinsertion (read-write).
 
     Methods
     -------
@@ -161,7 +160,7 @@ class MAX17048:
     # [0x16] CRATE      RO
     _cell_crate = RORegister(_MAX1704X_CRATE_REG, used_bytes=USED_BYTES_BOTH, signed=True)
     # [0x18] VRESET/ID  RW  Default: 0x96__
-    _reset_voltage = RegisterField(_MAX1704X_VRESET_ID_REG, num_bits=7, lowest_bit=9, independent_bytes=True)
+    _vreset = RegisterField(_MAX1704X_VRESET_ID_REG, num_bits=7, lowest_bit=9, independent_bytes=True)
     _comparator_disabled = RWBit(_MAX1704X_VRESET_ID_REG, bit=8, independent_bytes=True)
     chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     # [0x1A] STATUS     RW  Default: 0x01__
@@ -272,32 +271,6 @@ class MAX17048:
         return self._cell_crate * 0.208
 
     @property
-    def reset_voltage(self) -> float:
-        """
-        Reset threshold voltage.
-
-        Cell voltage threshold at which the device considers a battery removal
-        or reinsertion.
-
-        Returns
-        -------
-        float
-            Threshold voltage in volts, between 0 and 5.1 V.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return self._reset_voltage * 0.04  # 40 mV steps
-
-    @reset_voltage.setter
-    def reset_voltage(self, vreset: float) -> None:
-        if not 0 <= vreset <= (127 * 0.04):
-            raise ValueError("Reset voltage must be between 0 and 5.1V")
-        self._reset_voltage = int(vreset / 0.04)  # 40 mV steps
-
-    @property
     def comparator_disabled(self) -> bool:
         """
         Control whether the analog comparator for ``VRESET`` is disabled.
@@ -331,7 +304,7 @@ class MAX17048:
         Voltage reset flag.
 
         Indicates whether the cell voltage dropped below and subsequently
-        risen above the :py:attr:`reset_voltage` threshold.
+        risen above the :py:attr:`alert_voltage_reset_threshold` threshold.
 
         Returns
         -------
@@ -347,7 +320,7 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`reset_voltage`
+        :py:attr:`alert_voltage_reset_threshold`
         :py:meth:`clear_voltage_reset_alert`
         """
         return bool(self._voltage_reset_alert)
@@ -473,7 +446,7 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`reset_voltage`
+        :py:attr:`alert_voltage_reset_threshold`
         :py:meth:`clear_voltage_reset_alert`
         """
         return bool(self._envr)
@@ -895,7 +868,7 @@ class MAX17048:
         if not 0 <= valert_min <= (255 * 0.02):
             raise ValueError("Alert voltage must be between 0 and 5.1V")
         self._valrt_min = int(valert_min / 0.02)
-    
+
     @property
     def alert_voltage_low_flag(self) -> bool:
         """
@@ -934,3 +907,30 @@ class MAX17048:
         :py:attr:`alert_voltage_low_flag`
         """
         self._vl = 0
+
+    # Battery Removal/Reinsert
+    @property
+    def alert_voltage_reset_threshold(self) -> float:
+        """
+        Reset threshold voltage.
+
+        Cell voltage threshold at which the device considers a battery removal
+        or reinsertion.
+
+        Returns
+        -------
+        float
+            Threshold voltage in volts, between 0 and 5.1 V.
+
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return self._vreset * 0.04  # 40 mV steps
+
+    @alert_voltage_reset_threshold.setter
+    def alert_voltage_reset_threshold(self, vreset: float) -> None:
+        if not 0 <= vreset <= (127 * 0.04):
+            raise ValueError("Reset voltage must be between 0 and 5.1V")
+        self._vreset = int(vreset / 0.04)  # 40 mV steps

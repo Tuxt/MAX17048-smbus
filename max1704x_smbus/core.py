@@ -499,7 +499,9 @@ class MAX17048:
         self._hibrt_hibthr = 0x00
         self._hibrt_actthr = 0x00
 
-    # ALERTS
+    #####################
+    # API - ALERTS      #
+    #####################
     # Global
     @property
     def alert_global_flag(self) -> bool:

@@ -73,67 +73,65 @@ class MAX17048:
         (read-write).
     sleep : bool
         Forces the IC in or out of sleep mode (if `enable_sleep`) (read-write)
-    enable_soc_change_alert : bool
-        Enable/disable SOC change alerts (≥1% variation) (read-write).
-    active_alert : bool
-        ``True`` if any alert is currently active, ``False`` otherwise
-        (read-only).
-    low_soc_alert_threshold : int
-        SOC percentage threshold that triggers a low-SOC alert (read-write).
-    voltage_alert_min : float
-        Lower voltage threshold that triggers a voltage alert (read-write).
-    voltage_alert_max : float
-        Upper voltage threshold that triggers a voltage alert (read-write).
     charge_rate : float
         Estimated charge/discharge rate in percent per hour (read-only).
-    reset_voltage : float
-        Voltage threshold used to detect battery removal / reinsertion
-        (read-write).
     comparator_disabled : bool
         Disable the analog comparator while in hibernation (read-write).
     chip_id : int
         Chip ID register (read-only).
     alert_reason : int
         Bitmask of currently active alert causes (read-only).
-    reset_indicator : bool
-        Reset alert flag (read-only).
-    voltage_high_alert : bool
-        Voltage-high alert flag (read-only).
-    voltage_low_alert : bool
-        Voltage-low alert flag (read-only).
-    voltage_reset_alert : bool
-        Voltage-reset alert flag (read-only).
-    soc_low_alert : bool
-        SOC-low alert flag (read-only).
-    soc_change_alert : bool
+    alert_global_flag : bool
+        ``True`` if any alert is currently active, ``False`` otherwise (read-only).
+    alert_soc_change_enable : bool
+        Enable/disable SOC change alerts (≥1% variation) (read-write).
+    alert_soc_change_flag : bool
         SOC-change alert flag (read-only).
-    enable_voltage_reset_alert : bool
+    alert_soc_low_threshold : int
+        SOC percentage threshold that triggers a low-SOC alert (read-write).
+    alert_soc_low_flag : bool
+        SOC-low alert flag (read-only).
+    alert_voltage_high_threshold : float
+        Upper voltage threshold that triggers a voltage alert (read-write).
+    alert_voltage_high_flag : bool
+        Voltage-high alert flag (read-only).
+    alert_voltage_low_threshold : float
+        Lower voltage threshold that triggers a voltage alert (read-write).
+    alert_voltage_low_flag : bool
+        Voltage-low alert flag (read-only).
+    alert_voltage_reset_enable : bool
         Enable/disable voltage reset alerts (read-write).
+    alert_voltage_reset_threshold : float
+        Voltage threshold used to detect battery removal / reinsertion (read-write).
+    alert_voltage_reset_flag : bool
+        Voltage-reset alert flag (read-only).
+    alert_reset_indicator_flag : bool
+        Reset alert flag (read-only).
 
     Methods
     -------
     reset() -> None
         Issue a soft reset to the device.
-    clear_alert() -> None
-        Clear the global alert flag (and deassert the ALRT pin).
-    clear_voltage_alert_max() -> None
-        Clear the voltage high (VH) flag in the ``STATUS`` register.
-    clear_voltage_alert_min() -> None
-        Clear the voltage low (VL) flag in the ``STATUS`` register.
-    clear_voltage_reset_alert() -> None
-        Clear the voltage reset (VR) flag in the ``STATUS`` register.
-    clear_soc_low_alert() -> None
-        Clear the SOC low (HD) flag in the ``STATUS`` register.
-    clear_soc_change_alert() -> None
-        Clear the SOC change (SC) flag in the ``STATUS`` register.
-    clear_reset_indicator() -> None
-        Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
         Trigger a quick-start estimation of OCV/SOC.
     hibernate() -> None
         Force the device into hibernation mode immediately.
     wake() -> None
         Wake the device from hibernation mode immediately.
+    alert_global_flag_clear() -> None
+        Clear the global alert flag (and deassert the ALRT pin).
+    alert_soc_change_flag_clear() -> None
+        Clear the SOC change (SC) flag in the ``STATUS`` register.
+    alert_soc_low_flag_clear() -> None
+        Clear the SOC low (HD) flag in the ``STATUS`` register.
+    alert_voltage_high_flag_clear() -> None
+        Clear the voltage high (VH) flag in the ``STATUS`` register.
+    alert_voltage_low_flag_clear() -> None
+        Clear the voltage low (VL) flag in the ``STATUS`` register.
+    alert_voltage_reset_flag_clear() -> None
+        Clear the voltage reset (VR) flag in the ``STATUS`` register.
+    alert_reset_indicator_flag_clear() -> None
+        Clear the reset indicator (RI) flag in the ``STATUS`` register.
     """
 
     # [0x02] VCELL      RO
@@ -153,7 +151,7 @@ class MAX17048:
     rcomp = RWRegister(_MAX1704X_CONFIG_REG, used_bytes=USED_BYTES_MSB)
     _sleep = RWBit(_MAX1704X_CONFIG_REG, bit=7)
     _alsc = RWBit(_MAX1704X_CONFIG_REG, bit=6)
-    _alert_status = RWBit(_MAX1704X_CONFIG_REG, bit=5)
+    _alrt = RWBit(_MAX1704X_CONFIG_REG, bit=5)
     _athd = RegisterField(_MAX1704X_CONFIG_REG, num_bits=5, lowest_bit=0)
     # [0x14] VALRT      RW  Default: 0x00FF
     _valrt_min = RWRegister(_MAX1704X_VALERT_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
@@ -161,17 +159,17 @@ class MAX17048:
     # [0x16] CRATE      RO
     _cell_crate = RORegister(_MAX1704X_CRATE_REG, used_bytes=USED_BYTES_BOTH, signed=True)
     # [0x18] VRESET/ID  RW  Default: 0x96__
-    _reset_voltage = RegisterField(_MAX1704X_VRESET_ID_REG, num_bits=7, lowest_bit=9, independent_bytes=True)
+    _vreset = RegisterField(_MAX1704X_VRESET_ID_REG, num_bits=7, lowest_bit=9, independent_bytes=True)
     _comparator_disabled = RWBit(_MAX1704X_VRESET_ID_REG, bit=8, independent_bytes=True)
     chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     # [0x1A] STATUS     RW  Default: 0x01__
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
-    _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
-    _voltage_high_alert = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
-    _voltage_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
-    _voltage_reset_alert = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
-    _soc_low_alert = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
-    _soc_change_alert = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
+    _ri = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
+    _vh = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
+    _vl = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
+    _vr = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
+    _hd = RWBit(_MAX1704X_STATUS_REG, bit=12, independent_bytes=True)
+    _sc = RWBit(_MAX1704X_STATUS_REG, bit=13, independent_bytes=True)
     _envr = RWBit(_MAX1704X_STATUS_REG, bit=14, independent_bytes=True)
     # [0xFE] CMD        RW  Default: 0xFFFF
     _cmd = RWRegister(_MAX1704X_CMD_REG, used_bytes=USED_BYTES_BOTH)
@@ -230,7 +228,7 @@ class MAX17048:
             raise RuntimeError("Reset did not succeed")
 
         try:
-            self.clear_reset_indicator()  # Clean up RI alert
+            self.alert_reset_indicator_flag_clear()  # Clean up RI alert
         except OSError as e:
             raise RuntimeError("Clearing reset alert did not succeed") from e
 
@@ -272,32 +270,6 @@ class MAX17048:
         return self._cell_crate * 0.208
 
     @property
-    def reset_voltage(self) -> float:
-        """
-        Reset threshold voltage.
-
-        Cell voltage threshold at which the device considers a battery removal
-        or reinsertion.
-
-        Returns
-        -------
-        float
-            Threshold voltage in volts, between 0 and 5.1 V.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return self._reset_voltage * 0.04  # 40 mV steps
-
-    @reset_voltage.setter
-    def reset_voltage(self, vreset: float) -> None:
-        if not 0 <= vreset <= (127 * 0.04):
-            raise ValueError("Reset voltage must be between 0 and 5.1V")
-        self._reset_voltage = int(vreset / 0.04)  # 40 mV steps
-
-    @property
     def comparator_disabled(self) -> bool:
         """
         Control whether the analog comparator for ``VRESET`` is disabled.
@@ -324,409 +296,6 @@ class MAX17048:
     @comparator_disabled.setter
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
-
-    @property
-    def voltage_alert_min(self) -> float:
-        """
-        Minimum voltage threshold for triggering a voltage alert.
-
-        Returns
-        -------
-        float
-            Lower-limit threshold in volts, between 0 and 5.1 V.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return self._valrt_min * 0.02  # 20 mV steps
-
-    @voltage_alert_min.setter
-    def voltage_alert_min(self, valert_min: float) -> None:
-        if not 0 <= valert_min <= (255 * 0.02):
-            raise ValueError("Alert voltage must be between 0 and 5.1V")
-        self._valrt_min = int(valert_min / 0.02)
-
-    @property
-    def voltage_alert_max(self) -> float:
-        """The upper-limit voltage for the voltage alert."""
-        """
-        Maximum voltage threshold for triggering a voltage alert.
-
-        Returns
-        -------
-        float
-            Upper-limit threshold in volts, between 0 and 5.1 V.
-        
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return self._valrt_max * 0.02  # 20 mV steps
-
-    @voltage_alert_max.setter
-    def voltage_alert_max(self, valert_max: float) -> None:
-        if not 0 <= valert_max <= (255 * 0.02):
-            raise ValueError("Alert voltage must be between 0 and 5.1V")
-        self._valrt_max = int(valert_max / 0.02)
-
-    @property
-    def enable_soc_change_alert(self) -> bool:
-        """
-        Enable or disable the state-of-charge (SOC) change alert.
-
-        When enabled, the device asserts an alert whenever the SOC changes
-        by at least 1%.
-
-        Returns
-        -------
-        bool
-            ``True`` if the SOC change alert is enabled, ``False`` otherwise.
-        """
-        return bool(self._alsc)
-
-    @enable_soc_change_alert.setter
-    def enable_soc_change_alert(self, enabled: bool) -> None:
-        self._alsc = int(enabled)
-
-    @property
-    def voltage_high_alert(self) -> bool:
-        """
-        Voltage high flag.
-
-        Indicates whether the high voltage alert is active. ``True`` means the
-        cell voltage has exceeded the threshold set in :py:attr:`voltage_alert_max`.
-
-        Returns
-        -------
-        bool
-            ``True`` if the cell voltage has exceeded the threshold,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``VH`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_voltage_alert_max` to
-        clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`voltage_alert_max`
-        :py:meth:`clear_voltage_alert_max`
-        """
-        return bool(self._voltage_high_alert)
-
-    def clear_voltage_alert_max(self) -> None:
-        """
-        Clear the voltage high flag.
-
-        Clear the ``VH`` (voltage high) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`voltage_high_alert`
-        """
-        self._voltage_high_alert = 0
-
-    @property
-    def voltage_low_alert(self) -> bool:
-        """
-        Voltage low flag.
-
-        Indicates whether the low voltage alert is active. ``True`` means the cell
-        voltage has fallen below the threshold set in :py:attr:`voltage_alert_min`.
-
-        Returns
-        -------
-        bool
-            ``True`` if the cell voltage has fallen below the threshold,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``VL`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_voltage_alert_min` to
-        clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`voltage_alert_min`
-        :py:meth:`clear_voltage_alert_min`
-        """
-        return bool(self._voltage_low_alert)
-
-    def clear_voltage_alert_min(self) -> None:
-        """
-        Clear the voltage low flag.
-
-        Clear the ``VL`` (voltage low) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`voltage_low_alert`
-        """
-        self._voltage_low_alert = 0
-
-    @property
-    def voltage_reset_alert(self) -> bool:
-        """
-        Voltage reset flag.
-
-        Indicates whether the cell voltage dropped below and subsequently
-        risen above the :py:attr:`reset_voltage` threshold.
-
-        Returns
-        -------
-        bool
-            ``True`` if the cell voltage dropped below and then rose above the
-            configured reset threshold, ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``VR`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_voltage_reset_alert`
-        to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`reset_voltage`
-        :py:meth:`clear_voltage_reset_alert`
-        """
-        return bool(self._voltage_reset_alert)
-
-    def clear_voltage_reset_alert(self) -> None:
-        """
-        Clear the voltage reset flag.
-
-        Clear the ``VR`` (voltage reset) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`voltage_reset_alert`
-        """
-        self._voltage_reset_alert = 0
-
-    @property
-    def soc_low_alert(self) -> bool:
-        """
-        SOC low flag.
-
-        Indicates whether SOC crosses the :py:attr:`low_soc_alert_threshold`.
-
-        Returns
-        -------
-        bool
-            ``True`` if SOC crossed the configured threshold,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``HD`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_soc_low_alert`
-        to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`low_soc_alert_threshold`
-        :py:meth:`clear_soc_low_alert`
-        """
-        return bool(self._soc_low_alert)
-
-    def clear_soc_low_alert(self) -> None:
-        """
-        Clear the SOC low flag.
-
-        Clear the ``HD`` (SOC low) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`soc_low_alert`
-        """
-        self._soc_low_alert = 0
-
-    @property
-    def soc_change_alert(self) -> bool:
-        """
-        SOC change flag.
-
-        Indicates whether SOC has changed at least 1% (if enabled).
-
-        Returns
-        -------
-        bool
-            ``True`` if SOC changed at least 1%,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``SC`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_soc_change_alert`
-        to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`enable_soc_change_alert`
-        :py:meth:`clear_soc_change_alert`
-        """
-        return bool(self._soc_change_alert)
-
-    def clear_soc_change_alert(self) -> None:
-        """
-        Clear the SOC change flag.
-
-        Clear the ``SC`` (SOC change) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`soc_change_alert`
-        """
-        self._soc_change_alert = 0
-
-    @property
-    def active_alert(self) -> bool:
-        """
-        Indicate whether an alert condition is currently active.
-
-        Returns
-        -------
-        bool
-            ``True`` if an alert is active, ``False`` otherwise.
-
-        """
-        return bool(self._alert_status)
-
-    def clear_alert(self) -> None:
-        """
-        Clear the global alert flag and deassert the ``ALRT`` pin.
-
-        This operation resets the alert status in the configuration register and
-        simultaneously releases the physical ``ALRT`` pin, until a new alert
-        condition is triggered.
-        """
-        self._alert_status = 0
-
-    @property
-    def low_soc_alert_threshold(self) -> int:
-        """
-        Low-SOC alert threshold.
-
-        Defines the state-of-charge (SOC) percentage below which the
-        device asserts an alert condition.
-
-        Returns
-        -------
-        int
-            Threshold in percent, between 1 and 32%.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return 32 - self._athd
-
-    @low_soc_alert_threshold.setter
-    def low_soc_alert_threshold(self, percent_alert_threshold: int) -> None:
-        if not 0 < percent_alert_threshold <= 32:
-            raise ValueError("SOC alert threshold must be between 1 and 32%")
-        self._athd = 32 - percent_alert_threshold
-
-    @property
-    def alert_reason(self) -> int:
-        """
-        6-bit bitmask of currently active alert causes.
-
-        Returns
-        -------
-        int
-            Mask of alert flasgs. Multiple causes may be set simultaneously.
-            Individual causes can be checked against the module constants
-            (e.g. ``ALERTFLAG_SOC_LOW``).
-
-        See Also
-        --------
-        :py:const:`ALERTFLAG_SOC_CHANGE`
-        :py:const:`ALERTFLAG_SOC_LOW`
-        :py:const:`ALERTFLAG_VOLTAGE_RESET`
-        :py:const:`ALERTFLAG_VOLTAGE_LOW`
-        :py:const:`ALERTFLAG_VOLTAGE_HIGH`
-        :py:const:`ALERTFLAG_RESET_INDICATOR`
-        """
-        return self._status & 0x3F
-
-    @property
-    def reset_indicator(self) -> bool:
-        """
-        Reset indicator flag.
-
-        Indicates whether the device has recently powered up or reset and
-        still requires configuration. A value of ``True`` means the IC is
-        signaling that initialization is pending. ``False`` means the device
-        has already been configured and the flag has been cleared.
-
-        Returns
-        -------
-        bool
-            ``True`` if the reset indicator (RI) flag is set,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``RI`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_reset_indicator` to
-        acknowledge and clear the flag.
-
-        See Also
-        --------
-        :py:meth:`clear_reset_indicator`
-        """
-        return bool(self._reset_indicator)
-
-    def clear_reset_indicator(self) -> None:
-        """
-        Clear the reset indicator flag.
-
-        Acknowledges that the device has been configured after a reset or
-        power-up event by clearing the ``RI`` bit in the ``STATUS`` register.
-
-        Notes
-        -----
-        This method explicitly writes ``0`` to the ``RI`` flag. The bit is
-        set automatically by the device after power-up or reset.
-
-        See Also
-        --------
-        :py:attr:`reset_indicator`
-        """
-        self._reset_indicator = 0
-
-    @property
-    def enable_voltage_reset_alert(self) -> bool:
-        """
-        Enable or disable voltage reset alert.
-
-        Returns
-        -------
-        bool
-            ``True`` if voltage reset alert is enabled, ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``EnVr`` bit in the ``STATUS`` register
-        (read/write).
-
-        See Also
-        --------
-        :py:attr:`reset_voltage`
-        :py:meth:`clear_voltage_reset_alert`
-        """
-        return bool(self._envr)
-
-    @enable_voltage_reset_alert.setter
-    def enable_voltage_reset_alert(self, enabled: bool) -> None:
-        self._envr = int(enabled)
 
     def quick_start(self) -> None:
         """
@@ -929,3 +498,442 @@ class MAX17048:
         """
         self._hibrt_hibthr = 0x00
         self._hibrt_actthr = 0x00
+
+    #####################
+    # API - ALERTS      #
+    #####################
+    # Global
+    @property
+    def alert_global_flag(self) -> bool:
+        """
+        Indicate whether an alert condition is currently active.
+
+        Returns
+        -------
+        bool
+            ``True`` if an alert is active, ``False`` otherwise.
+
+        """
+        return bool(self._alrt)
+
+    def alert_global_flag_clear(self) -> None:
+        """
+        Clear the global alert flag and deassert the ``ALRT`` pin.
+
+        This operation resets the alert status in the configuration register and
+        simultaneously releases the physical ``ALRT`` pin, until a new alert
+        condition is triggered.
+        """
+        self._alrt = 0
+
+    @property
+    def alert_reason(self) -> int:
+        """
+        6-bit bitmask of currently active alert causes.
+
+        Returns
+        -------
+        int
+            Mask of alert flasgs. Multiple causes may be set simultaneously.
+            Individual causes can be checked against the module constants
+            (e.g. ``ALERTFLAG_SOC_LOW``).
+
+        See Also
+        --------
+        :py:const:`ALERTFLAG_SOC_CHANGE`
+        :py:const:`ALERTFLAG_SOC_LOW`
+        :py:const:`ALERTFLAG_VOLTAGE_RESET`
+        :py:const:`ALERTFLAG_VOLTAGE_LOW`
+        :py:const:`ALERTFLAG_VOLTAGE_HIGH`
+        :py:const:`ALERTFLAG_RESET_INDICATOR`
+        """
+        return self._status & 0x3F
+
+    # SoC Change
+    @property
+    def alert_soc_change_enable(self) -> bool:
+        """
+        Enable or disable the state-of-charge (SOC) change alert.
+
+        When enabled, the device asserts an alert whenever the SOC changes
+        by at least 1%.
+
+        Returns
+        -------
+        bool
+            ``True`` if the SOC change alert is enabled, ``False`` otherwise.
+        """
+        return bool(self._alsc)
+
+    @alert_soc_change_enable.setter
+    def alert_soc_change_enable(self, enabled: bool) -> None:
+        self._alsc = int(enabled)
+
+    @property
+    def alert_soc_change_flag(self) -> bool:
+        """
+        SOC change flag.
+
+        Indicates whether SOC has changed at least 1% (if enabled).
+
+        Returns
+        -------
+        bool
+            ``True`` if SOC changed at least 1%,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``SC`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_soc_change_flag_clear`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_change_enable`
+        :py:meth:`alert_soc_change_flag_clear`
+        """
+        return bool(self._sc)
+
+    def alert_soc_change_flag_clear(self) -> None:
+        """
+        Clear the SOC change flag.
+
+        Clear the ``SC`` (SOC change) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_change_flag`
+        """
+        self._sc = 0
+
+    # Low SoC
+    @property
+    def alert_soc_low_threshold(self) -> int:
+        """
+        Low-SOC alert threshold.
+
+        Defines the state-of-charge (SOC) percentage below which the
+        device asserts an alert condition.
+
+        Returns
+        -------
+        int
+            Threshold in percent, between 1 and 32%.
+
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return 32 - self._athd
+
+    @alert_soc_low_threshold.setter
+    def alert_soc_low_threshold(self, percent_alert_threshold: int) -> None:
+        if not 0 < percent_alert_threshold <= 32:
+            raise ValueError("SOC alert threshold must be between 1 and 32%")
+        self._athd = 32 - percent_alert_threshold
+
+    @property
+    def alert_soc_low_flag(self) -> bool:
+        """
+        SOC low flag.
+
+        Indicates whether SOC crosses the :py:attr:`alert_soc_low_threshold`.
+
+        Returns
+        -------
+        bool
+            ``True`` if SOC crossed the configured threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``HD`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_soc_low_flag_clear`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_low_threshold`
+        :py:meth:`alert_soc_low_flag_clear`
+        """
+        return bool(self._hd)
+
+    def alert_soc_low_flag_clear(self) -> None:
+        """
+        Clear the SOC low flag.
+
+        Clear the ``HD`` (SOC low) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_low_flag`
+        """
+        self._hd = 0
+
+    # Voltage High
+    @property
+    def alert_voltage_high_threshold(self) -> float:
+        """The upper-limit voltage for the voltage alert."""
+        """
+        Maximum voltage threshold for triggering a voltage alert.
+
+        Returns
+        -------
+        float
+            Upper-limit threshold in volts, between 0 and 5.1 V.
+        
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return self._valrt_max * 0.02  # 20 mV steps
+
+    @alert_voltage_high_threshold.setter
+    def alert_voltage_high_threshold(self, valert_max: float) -> None:
+        if not 0 <= valert_max <= (255 * 0.02):
+            raise ValueError("Alert voltage must be between 0 and 5.1V")
+        self._valrt_max = int(valert_max / 0.02)
+
+    @property
+    def alert_voltage_high_flag(self) -> bool:
+        """
+        Voltage high flag.
+
+        Indicates whether the high voltage alert is active. ``True`` means the
+        cell voltage has exceeded the threshold set in :py:attr:`alert_voltage_high_threshold`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage has exceeded the threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VH`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_voltage_high_flag_clear` to
+        clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_high_threshold`
+        :py:meth:`alert_voltage_high_flag_clear`
+        """
+        return bool(self._vh)
+
+    def alert_voltage_high_flag_clear(self) -> None:
+        """
+        Clear the voltage high flag.
+
+        Clear the ``VH`` (voltage high) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_high_flag`
+        """
+        self._vh = 0
+
+    # Voltage Low
+    @property
+    def alert_voltage_low_threshold(self) -> float:
+        """
+        Minimum voltage threshold for triggering a voltage alert.
+
+        Returns
+        -------
+        float
+            Lower-limit threshold in volts, between 0 and 5.1 V.
+
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return self._valrt_min * 0.02  # 20 mV steps
+
+    @alert_voltage_low_threshold.setter
+    def alert_voltage_low_threshold(self, valert_min: float) -> None:
+        if not 0 <= valert_min <= (255 * 0.02):
+            raise ValueError("Alert voltage must be between 0 and 5.1V")
+        self._valrt_min = int(valert_min / 0.02)
+
+    @property
+    def alert_voltage_low_flag(self) -> bool:
+        """
+        Voltage low flag.
+
+        Indicates whether the low voltage alert is active. ``True`` means the cell
+        voltage has fallen below the threshold set in :py:attr:`alert_voltage_low_threshold`.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage has fallen below the threshold,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VL`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_voltage_low_flag_clear` to
+        clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_low_threshold`
+        :py:meth:`alert_voltage_low_flag_clear`
+        """
+        return bool(self._vl)
+
+    def alert_voltage_low_flag_clear(self) -> None:
+        """
+        Clear the voltage low flag.
+
+        Clear the ``VL`` (voltage low) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_low_flag`
+        """
+        self._vl = 0
+
+    # Battery Removal/Reinsert
+    @property
+    def alert_voltage_reset_enable(self) -> bool:
+        """
+        Enable or disable voltage reset alert.
+
+        Returns
+        -------
+        bool
+            ``True`` if voltage reset alert is enabled, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``EnVr`` bit in the ``STATUS`` register
+        (read/write).
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:meth:`alert_voltage_reset_flag_clear`
+        """
+        return bool(self._envr)
+
+    @alert_voltage_reset_enable.setter
+    def alert_voltage_reset_enable(self, enabled: bool) -> None:
+        self._envr = int(enabled)
+
+    @property
+    def alert_voltage_reset_threshold(self) -> float:
+        """
+        Reset threshold voltage.
+
+        Cell voltage threshold at which the device considers a battery removal
+        or reinsertion.
+
+        Returns
+        -------
+        float
+            Threshold voltage in volts, between 0 and 5.1 V.
+
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return self._vreset * 0.04  # 40 mV steps
+
+    @alert_voltage_reset_threshold.setter
+    def alert_voltage_reset_threshold(self, vreset: float) -> None:
+        if not 0 <= vreset <= (127 * 0.04):
+            raise ValueError("Reset voltage must be between 0 and 5.1V")
+        self._vreset = int(vreset / 0.04)  # 40 mV steps
+
+    @property
+    def alert_voltage_reset_flag(self) -> bool:
+        """
+        Voltage reset flag.
+
+        Indicates whether the cell voltage dropped below and subsequently
+        risen above the :py:attr:`alert_voltage_reset_threshold` threshold.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage dropped below and then rose above the
+            configured reset threshold, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VR`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_voltage_reset_flag_clear`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:meth:`alert_voltage_reset_flag_clear`
+        """
+        return bool(self._vr)
+
+    def alert_voltage_reset_flag_clear(self) -> None:
+        """
+        Clear the voltage reset flag.
+
+        Clear the ``VR`` (voltage reset) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_flag`
+        """
+        self._vr = 0
+
+    # Reset Indicator
+    @property
+    def alert_reset_indicator_flag(self) -> bool:
+        """
+        Reset indicator flag.
+
+        Indicates whether the device has recently powered up or reset and
+        still requires configuration. A value of ``True`` means the IC is
+        signaling that initialization is pending. ``False`` means the device
+        has already been configured and the flag has been cleared.
+
+        Returns
+        -------
+        bool
+            ``True`` if the reset indicator (RI) flag is set,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``RI`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_reset_indicator_flag_clear` to
+        acknowledge and clear the flag.
+
+        See Also
+        --------
+        :py:meth:`alert_reset_indicator_flag_clear`
+        """
+        return bool(self._ri)
+
+    def alert_reset_indicator_flag_clear(self) -> None:
+        """
+        Clear the reset indicator flag.
+
+        Acknowledges that the device has been configured after a reset or
+        power-up event by clearing the ``RI`` bit in the ``STATUS`` register.
+
+        Notes
+        -----
+        This method explicitly writes ``0`` to the ``RI`` flag. The bit is
+        set automatically by the device after power-up or reset.
+
+        See Also
+        --------
+        :py:attr:`alert_reset_indicator_flag`
+        """
+        self._ri = 0

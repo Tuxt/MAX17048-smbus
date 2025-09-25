@@ -297,29 +297,6 @@ class MAX17048:
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
 
-    @property
-    def alert_reason(self) -> int:
-        """
-        6-bit bitmask of currently active alert causes.
-
-        Returns
-        -------
-        int
-            Mask of alert flasgs. Multiple causes may be set simultaneously.
-            Individual causes can be checked against the module constants
-            (e.g. ``ALERTFLAG_SOC_LOW``).
-
-        See Also
-        --------
-        :py:const:`ALERTFLAG_SOC_CHANGE`
-        :py:const:`ALERTFLAG_SOC_LOW`
-        :py:const:`ALERTFLAG_VOLTAGE_RESET`
-        :py:const:`ALERTFLAG_VOLTAGE_LOW`
-        :py:const:`ALERTFLAG_VOLTAGE_HIGH`
-        :py:const:`ALERTFLAG_RESET_INDICATOR`
-        """
-        return self._status & 0x3F
-
     def quick_start(self) -> None:
         """
         Trigger a quick-start estimation of OCV and SOC.
@@ -546,6 +523,29 @@ class MAX17048:
         condition is triggered.
         """
         self._alrt = 0
+
+    @property
+    def alert_reason(self) -> int:
+        """
+        6-bit bitmask of currently active alert causes.
+
+        Returns
+        -------
+        int
+            Mask of alert flasgs. Multiple causes may be set simultaneously.
+            Individual causes can be checked against the module constants
+            (e.g. ``ALERTFLAG_SOC_LOW``).
+
+        See Also
+        --------
+        :py:const:`ALERTFLAG_SOC_CHANGE`
+        :py:const:`ALERTFLAG_SOC_LOW`
+        :py:const:`ALERTFLAG_VOLTAGE_RESET`
+        :py:const:`ALERTFLAG_VOLTAGE_LOW`
+        :py:const:`ALERTFLAG_VOLTAGE_HIGH`
+        :py:const:`ALERTFLAG_RESET_INDICATOR`
+        """
+        return self._status & 0x3F
 
     # SoC Change
     @property

@@ -73,9 +73,6 @@ class MAX17048:
         (read-write).
     sleep : bool
         Forces the IC in or out of sleep mode (if `enable_sleep`) (read-write)
-    active_alert : bool
-        ``True`` if any alert is currently active, ``False`` otherwise
-        (read-only).
     charge_rate : float
         Estimated charge/discharge rate in percent per hour (read-only).
     comparator_disabled : bool
@@ -84,6 +81,8 @@ class MAX17048:
         Chip ID register (read-only).
     alert_reason : int
         Bitmask of currently active alert causes (read-only).
+    alert_global_flag : bool
+        ``True`` if any alert is currently active, ``False`` otherwise (read-only).
     alert_soc_change_enable : bool
         Enable/disable SOC change alerts (≥1% variation) (read-write).
     alert_soc_change_flag : bool
@@ -152,7 +151,7 @@ class MAX17048:
     rcomp = RWRegister(_MAX1704X_CONFIG_REG, used_bytes=USED_BYTES_MSB)
     _sleep = RWBit(_MAX1704X_CONFIG_REG, bit=7)
     _alsc = RWBit(_MAX1704X_CONFIG_REG, bit=6)
-    _alert_status = RWBit(_MAX1704X_CONFIG_REG, bit=5)
+    _alrt = RWBit(_MAX1704X_CONFIG_REG, bit=5)
     _athd = RegisterField(_MAX1704X_CONFIG_REG, num_bits=5, lowest_bit=0)
     # [0x14] VALRT      RW  Default: 0x00FF
     _valrt_min = RWRegister(_MAX1704X_VALERT_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
@@ -298,19 +297,6 @@ class MAX17048:
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
 
-    @property
-    def active_alert(self) -> bool:
-        """
-        Indicate whether an alert condition is currently active.
-
-        Returns
-        -------
-        bool
-            ``True`` if an alert is active, ``False`` otherwise.
-
-        """
-        return bool(self._alert_status)
-
     def clear_alert(self) -> None:
         """
         Clear the global alert flag and deassert the ``ALRT`` pin.
@@ -319,7 +305,7 @@ class MAX17048:
         simultaneously releases the physical ``ALRT`` pin, until a new alert
         condition is triggered.
         """
-        self._alert_status = 0
+        self._alrt = 0
 
     @property
     def alert_reason(self) -> int:
@@ -547,6 +533,20 @@ class MAX17048:
         self._hibrt_actthr = 0x00
 
     # ALERTS
+    # Global
+    @property
+    def alert_global_flag(self) -> bool:
+        """
+        Indicate whether an alert condition is currently active.
+
+        Returns
+        -------
+        bool
+            ``True`` if an alert is active, ``False`` otherwise.
+
+        """
+        return bool(self._alrt)
+
     # SoC Change
     @property
     def alert_soc_change_enable(self) -> bool:

@@ -115,8 +115,6 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
-    clear_reset_indicator() -> None
-        Clear the reset indicator (RI) flag in the ``STATUS`` register.
     quick_start() -> None
         Trigger a quick-start estimation of OCV/SOC.
     hibernate() -> None
@@ -133,6 +131,8 @@ class MAX17048:
         Clear the voltage low (VL) flag in the ``STATUS`` register.
     alert_voltage_reset_flag_clear() -> None
         Clear the voltage reset (VR) flag in the ``STATUS`` register.
+    alert_reset_indicator_flag_clear() -> None
+        Clear the reset indicator (RI) flag in the ``STATUS`` register.
     """
 
     # [0x02] VCELL      RO
@@ -229,7 +229,7 @@ class MAX17048:
             raise RuntimeError("Reset did not succeed")
 
         try:
-            self.clear_reset_indicator()  # Clean up RI alert
+            self.alert_reset_indicator_flag_clear()  # Clean up RI alert
         except OSError as e:
             raise RuntimeError("Clearing reset alert did not succeed") from e
 
@@ -363,32 +363,14 @@ class MAX17048:
         Notes
         -----
         Corresponds to the ``RI`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_reset_indicator` to
+        property is read-only. Use :py:meth:`alert_reset_indicator_flag_clear` to
         acknowledge and clear the flag.
 
         See Also
         --------
-        :py:meth:`clear_reset_indicator`
+        :py:meth:`alert_reset_indicator_flag_clear`
         """
         return bool(self._reset_indicator)
-
-    def clear_reset_indicator(self) -> None:
-        """
-        Clear the reset indicator flag.
-
-        Acknowledges that the device has been configured after a reset or
-        power-up event by clearing the ``RI`` bit in the ``STATUS`` register.
-
-        Notes
-        -----
-        This method explicitly writes ``0`` to the ``RI`` flag. The bit is
-        set automatically by the device after power-up or reset.
-
-        See Also
-        --------
-        :py:attr:`reset_indicator`
-        """
-        self._reset_indicator = 0
 
     def quick_start(self) -> None:
         """
@@ -934,3 +916,22 @@ class MAX17048:
         :py:attr:`alert_voltage_reset_flag`
         """
         self._vr = 0
+
+    # Reset Indicator
+    def alert_reset_indicator_flag_clear(self) -> None:
+        """
+        Clear the reset indicator flag.
+
+        Acknowledges that the device has been configured after a reset or
+        power-up event by clearing the ``RI`` bit in the ``STATUS`` register.
+
+        Notes
+        -----
+        This method explicitly writes ``0`` to the ``RI`` flag. The bit is
+        set automatically by the device after power-up or reset.
+
+        See Also
+        --------
+        :py:attr:`reset_indicator`
+        """
+        self._reset_indicator = 0

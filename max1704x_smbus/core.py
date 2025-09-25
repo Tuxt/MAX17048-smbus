@@ -116,8 +116,6 @@ class MAX17048:
         Issue a soft reset to the device.
     clear_alert() -> None
         Clear the global alert flag (and deassert the ALRT pin).
-    clear_voltage_alert_min() -> None
-        Clear the voltage low (VL) flag in the ``STATUS`` register.
     clear_voltage_reset_alert() -> None
         Clear the voltage reset (VR) flag in the ``STATUS`` register.
     clear_reset_indicator() -> None
@@ -134,6 +132,8 @@ class MAX17048:
         Clear the SOC low (HD) flag in the ``STATUS`` register.
     alert_voltage_high_flag_clear() -> None
         Clear the voltage high (VH) flag in the ``STATUS`` register.
+    alert_voltage_low_flag_clear() -> None
+        Clear the voltage low (VL) flag in the ``STATUS`` register.
     """
 
     # [0x02] VCELL      RO
@@ -347,18 +347,6 @@ class MAX17048:
         if not 0 <= valert_min <= (255 * 0.02):
             raise ValueError("Alert voltage must be between 0 and 5.1V")
         self._valrt_min = int(valert_min / 0.02)
-
-    def clear_voltage_alert_min(self) -> None:
-        """
-        Clear the voltage low flag.
-
-        Clear the ``VL`` (voltage low) flag in the ``STATUS`` register.
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_low_flag`
-        """
-        self._vl = 0
 
     @property
     def voltage_reset_alert(self) -> bool:
@@ -925,12 +913,24 @@ class MAX17048:
         Notes
         -----
         Corresponds to the ``VL`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`clear_voltage_alert_min` to
+        property is read-only. Use :py:meth:`alert_voltage_low_flag_clear` to
         clear the flag after handling the alert.
 
         See Also
         --------
         :py:attr:`voltage_alert_min`
-        :py:meth:`clear_voltage_alert_min`
+        :py:meth:`alert_voltage_low_flag_clear`
         """
         return bool(self._vl)
+
+    def alert_voltage_low_flag_clear(self) -> None:
+        """
+        Clear the voltage low flag.
+
+        Clear the ``VL`` (voltage low) flag in the ``STATUS`` register.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_low_flag`
+        """
+        self._vl = 0

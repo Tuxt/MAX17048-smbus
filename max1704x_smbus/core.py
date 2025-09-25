@@ -76,8 +76,6 @@ class MAX17048:
     active_alert : bool
         ``True`` if any alert is currently active, ``False`` otherwise
         (read-only).
-    voltage_alert_min : float
-        Lower voltage threshold that triggers a voltage alert (read-write).
     charge_rate : float
         Estimated charge/discharge rate in percent per hour (read-only).
     reset_voltage : float
@@ -107,6 +105,8 @@ class MAX17048:
         Upper voltage threshold that triggers a voltage alert (read-write).
     alert_voltage_high_flag : bool
         Voltage-high alert flag (read-only).
+    alert_voltage_low_threshold : float
+        Lower voltage threshold that triggers a voltage alert (read-write).
     alert_voltage_low_flag : bool
         Voltage-low alert flag (read-only).
 
@@ -324,29 +324,6 @@ class MAX17048:
     @comparator_disabled.setter
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
-
-    @property
-    def voltage_alert_min(self) -> float:
-        """
-        Minimum voltage threshold for triggering a voltage alert.
-
-        Returns
-        -------
-        float
-            Lower-limit threshold in volts, between 0 and 5.1 V.
-
-        Raises
-        ------
-        :py:exc:`ValueError`
-            If a value outside the valid range is assigned.
-        """
-        return self._valrt_min * 0.02  # 20 mV steps
-
-    @voltage_alert_min.setter
-    def voltage_alert_min(self, valert_min: float) -> None:
-        if not 0 <= valert_min <= (255 * 0.02):
-            raise ValueError("Alert voltage must be between 0 and 5.1V")
-        self._valrt_min = int(valert_min / 0.02)
 
     @property
     def voltage_reset_alert(self) -> bool:
@@ -897,12 +874,35 @@ class MAX17048:
 
     # Voltage Low
     @property
+    def alert_voltage_low_threshold(self) -> float:
+        """
+        Minimum voltage threshold for triggering a voltage alert.
+
+        Returns
+        -------
+        float
+            Lower-limit threshold in volts, between 0 and 5.1 V.
+
+        Raises
+        ------
+        :py:exc:`ValueError`
+            If a value outside the valid range is assigned.
+        """
+        return self._valrt_min * 0.02  # 20 mV steps
+
+    @alert_voltage_low_threshold.setter
+    def alert_voltage_low_threshold(self, valert_min: float) -> None:
+        if not 0 <= valert_min <= (255 * 0.02):
+            raise ValueError("Alert voltage must be between 0 and 5.1V")
+        self._valrt_min = int(valert_min / 0.02)
+    
+    @property
     def alert_voltage_low_flag(self) -> bool:
         """
         Voltage low flag.
 
         Indicates whether the low voltage alert is active. ``True`` means the cell
-        voltage has fallen below the threshold set in :py:attr:`voltage_alert_min`.
+        voltage has fallen below the threshold set in :py:attr:`alert_voltage_low_threshold`.
 
         Returns
         -------
@@ -918,7 +918,7 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`voltage_alert_min`
+        :py:attr:`alert_voltage_low_threshold`
         :py:meth:`alert_voltage_low_flag_clear`
         """
         return bool(self._vl)

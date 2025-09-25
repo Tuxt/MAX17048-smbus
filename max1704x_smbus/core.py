@@ -88,8 +88,6 @@ class MAX17048:
         Reset alert flag (read-only).
     voltage_reset_alert : bool
         Voltage-reset alert flag (read-only).
-    enable_voltage_reset_alert : bool
-        Enable/disable voltage reset alerts (read-write).
     alert_soc_change_enable : bool
         Enable/disable SOC change alerts (≥1% variation) (read-write).
     alert_soc_change_flag : bool
@@ -106,6 +104,8 @@ class MAX17048:
         Lower voltage threshold that triggers a voltage alert (read-write).
     alert_voltage_low_flag : bool
         Voltage-low alert flag (read-only).
+    alert_voltage_reset_enable : bool
+        Enable/disable voltage reset alerts (read-write).
     alert_voltage_reset_threshold : float
         Voltage threshold used to detect battery removal / reinsertion (read-write).
 
@@ -428,32 +428,6 @@ class MAX17048:
         :py:attr:`reset_indicator`
         """
         self._reset_indicator = 0
-
-    @property
-    def enable_voltage_reset_alert(self) -> bool:
-        """
-        Enable or disable voltage reset alert.
-
-        Returns
-        -------
-        bool
-            ``True`` if voltage reset alert is enabled, ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``EnVr`` bit in the ``STATUS`` register
-        (read/write).
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_reset_threshold`
-        :py:meth:`clear_voltage_reset_alert`
-        """
-        return bool(self._envr)
-
-    @enable_voltage_reset_alert.setter
-    def enable_voltage_reset_alert(self, enabled: bool) -> None:
-        self._envr = int(enabled)
 
     def quick_start(self) -> None:
         """
@@ -909,6 +883,32 @@ class MAX17048:
         self._vl = 0
 
     # Battery Removal/Reinsert
+    @property
+    def alert_voltage_reset_enable(self) -> bool:
+        """
+        Enable or disable voltage reset alert.
+
+        Returns
+        -------
+        bool
+            ``True`` if voltage reset alert is enabled, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``EnVr`` bit in the ``STATUS`` register
+        (read/write).
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:meth:`clear_voltage_reset_alert`
+        """
+        return bool(self._envr)
+
+    @alert_voltage_reset_enable.setter
+    def alert_voltage_reset_enable(self, enabled: bool) -> None:
+        self._envr = int(enabled)
+
     @property
     def alert_voltage_reset_threshold(self) -> float:
         """

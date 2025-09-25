@@ -84,8 +84,6 @@ class MAX17048:
         Chip ID register (read-only).
     alert_reason : int
         Bitmask of currently active alert causes (read-only).
-    reset_indicator : bool
-        Reset alert flag (read-only).
     alert_soc_change_enable : bool
         Enable/disable SOC change alerts (≥1% variation) (read-write).
     alert_soc_change_flag : bool
@@ -108,6 +106,8 @@ class MAX17048:
         Voltage threshold used to detect battery removal / reinsertion (read-write).
     alert_voltage_reset_flag : bool
         Voltage-reset alert flag (read-only).
+    alert_reset_indicator_flag : bool
+        Reset alert flag (read-only).
 
     Methods
     -------
@@ -165,7 +165,7 @@ class MAX17048:
     chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     # [0x1A] STATUS     RW  Default: 0x01__
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
-    _reset_indicator = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
+    _ri = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
     _vh = RWBit(_MAX1704X_STATUS_REG, bit=9, independent_bytes=True)
     _vl = RWBit(_MAX1704X_STATUS_REG, bit=10, independent_bytes=True)
     _vr = RWBit(_MAX1704X_STATUS_REG, bit=11, independent_bytes=True)
@@ -343,34 +343,6 @@ class MAX17048:
         :py:const:`ALERTFLAG_RESET_INDICATOR`
         """
         return self._status & 0x3F
-
-    @property
-    def reset_indicator(self) -> bool:
-        """
-        Reset indicator flag.
-
-        Indicates whether the device has recently powered up or reset and
-        still requires configuration. A value of ``True`` means the IC is
-        signaling that initialization is pending. ``False`` means the device
-        has already been configured and the flag has been cleared.
-
-        Returns
-        -------
-        bool
-            ``True`` if the reset indicator (RI) flag is set,
-            ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``RI`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`alert_reset_indicator_flag_clear` to
-        acknowledge and clear the flag.
-
-        See Also
-        --------
-        :py:meth:`alert_reset_indicator_flag_clear`
-        """
-        return bool(self._reset_indicator)
 
     def quick_start(self) -> None:
         """
@@ -918,6 +890,34 @@ class MAX17048:
         self._vr = 0
 
     # Reset Indicator
+    @property
+    def alert_reset_indicator_flag(self) -> bool:
+        """
+        Reset indicator flag.
+
+        Indicates whether the device has recently powered up or reset and
+        still requires configuration. A value of ``True`` means the IC is
+        signaling that initialization is pending. ``False`` means the device
+        has already been configured and the flag has been cleared.
+
+        Returns
+        -------
+        bool
+            ``True`` if the reset indicator (RI) flag is set,
+            ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``RI`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_reset_indicator_flag_clear` to
+        acknowledge and clear the flag.
+
+        See Also
+        --------
+        :py:meth:`alert_reset_indicator_flag_clear`
+        """
+        return bool(self._ri)
+
     def alert_reset_indicator_flag_clear(self) -> None:
         """
         Clear the reset indicator flag.
@@ -932,6 +932,6 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`reset_indicator`
+        :py:attr:`alert_reset_indicator_flag`
         """
-        self._reset_indicator = 0
+        self._ri = 0

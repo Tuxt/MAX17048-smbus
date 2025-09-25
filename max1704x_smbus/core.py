@@ -59,8 +59,6 @@ class MAX17048:
         State-of-charge (SOC) as a percentage (read-only).
     hibernating : bool
         ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
-    enable_sleep : bool
-        Enable or disable the device sleep mode (read/write).
     chip_version : int
         Raw chip version register (read-only).
     hibernation_threshold : float
@@ -72,13 +70,15 @@ class MAX17048:
         RCOMP configuration to tune compensation for different battery types
         (read-write).
     sleep : bool
-        Forces the IC in or out of sleep mode (if `enable_sleep`) (read-write)
+        Forces the IC in or out of sleep mode (if `sleep_enable`) (read-write)
     charge_rate : float
         Estimated charge/discharge rate in percent per hour (read-only).
     comparator_disabled : bool
         Disable the analog comparator while in hibernation (read-write).
     chip_id : int
         Chip ID register (read-only).
+    sleep_enable : bool
+        Enable or disable the device sleep mode (read/write).
     alert_reason : int
         Bitmask of currently active alert causes (read-only).
     alert_global_flag : bool
@@ -140,7 +140,7 @@ class MAX17048:
     _cell_soc = RORegister(_MAX1704X_SOC_REG, used_bytes=USED_BYTES_BOTH)
     # [0x06] MODE       WO  Default: 0x0000
     _hibernating = ROBit(_MAX1704X_MODE_REG, bit=4)
-    _enable_sleep = RWBit(_MAX1704X_MODE_REG, bit=5)
+    _ensleep = RWBit(_MAX1704X_MODE_REG, bit=5)
     _quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
     # [0x08] VERSION    RO  Default: 0x001_
     chip_version = RORegister(_MAX1704X_VERSION_REG, used_bytes=USED_BYTES_BOTH)
@@ -201,7 +201,7 @@ class MAX17048:
             raise RuntimeError("Failed to find MAX1704X - check your wiring!")
 
         self.reset()
-        self.enable_sleep = False
+        self.sleep_enable = False
         self.sleep = False
 
     def reset(self) -> None:
@@ -313,34 +313,13 @@ class MAX17048:
         self._quick_start = 1
 
     @property
-    def enable_sleep(self) -> bool:
-        """
-        Enable or disable sleep mode.
-
-        Returns
-        -------
-        bool
-            ``True`` if sleep mode is enabled, ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``EnSleep`` bit in the ``MODE`` register
-        (read/write).
-        """
-        return bool(self._enable_sleep)
-
-    @enable_sleep.setter
-    def enable_sleep(self, enabled: bool) -> None:
-        self._enable_sleep = int(enabled)
-
-    @property
     def sleep(self) -> bool:
         """
         Control whether the IC is forced into sleep mode.
 
         Writing ``True`` forces the device into sleep mode, and ``False``
         forces it to exit. This control is effective only if
-        :py:attr:`enable_sleep` is enabled.
+        :py:attr:`sleep_enable` is enabled.
 
         Returns
         -------
@@ -498,6 +477,30 @@ class MAX17048:
         """
         self._hibrt_hibthr = 0x00
         self._hibrt_actthr = 0x00
+
+    #####################
+    # API - SLEEP       #
+    #####################
+    @property
+    def sleep_enable(self) -> bool:
+        """
+        Enable or disable sleep mode.
+
+        Returns
+        -------
+        bool
+            ``True`` if sleep mode is enabled, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``EnSleep`` bit in the ``MODE`` register
+        (read/write).
+        """
+        return bool(self._ensleep)
+
+    @sleep_enable.setter
+    def sleep_enable(self, enabled: bool) -> None:
+        self._ensleep = int(enabled)
 
     #####################
     # API - ALERTS      #

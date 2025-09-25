@@ -112,14 +112,14 @@ class MAX17048:
     -------
     reset() -> None
         Issue a soft reset to the device.
-    clear_alert() -> None
-        Clear the global alert flag (and deassert the ALRT pin).
     quick_start() -> None
         Trigger a quick-start estimation of OCV/SOC.
     hibernate() -> None
         Force the device into hibernation mode immediately.
     wake() -> None
         Wake the device from hibernation mode immediately.
+    alert_global_flag_clear() -> None
+        Clear the global alert flag (and deassert the ALRT pin).
     alert_soc_change_flag_clear() -> None
         Clear the SOC change (SC) flag in the ``STATUS`` register.
     alert_soc_low_flag_clear() -> None
@@ -296,16 +296,6 @@ class MAX17048:
     @comparator_disabled.setter
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
-
-    def clear_alert(self) -> None:
-        """
-        Clear the global alert flag and deassert the ``ALRT`` pin.
-
-        This operation resets the alert status in the configuration register and
-        simultaneously releases the physical ``ALRT`` pin, until a new alert
-        condition is triggered.
-        """
-        self._alrt = 0
 
     @property
     def alert_reason(self) -> int:
@@ -546,6 +536,16 @@ class MAX17048:
 
         """
         return bool(self._alrt)
+
+    def alert_global_flag_clear(self) -> None:
+        """
+        Clear the global alert flag and deassert the ``ALRT`` pin.
+
+        This operation resets the alert status in the configuration register and
+        simultaneously releases the physical ``ALRT`` pin, until a new alert
+        condition is triggered.
+        """
+        self._alrt = 0
 
     # SoC Change
     @property

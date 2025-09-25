@@ -86,8 +86,6 @@ class MAX17048:
         Bitmask of currently active alert causes (read-only).
     reset_indicator : bool
         Reset alert flag (read-only).
-    voltage_reset_alert : bool
-        Voltage-reset alert flag (read-only).
     alert_soc_change_enable : bool
         Enable/disable SOC change alerts (≥1% variation) (read-write).
     alert_soc_change_flag : bool
@@ -108,6 +106,8 @@ class MAX17048:
         Enable/disable voltage reset alerts (read-write).
     alert_voltage_reset_threshold : float
         Voltage threshold used to detect battery removal / reinsertion (read-write).
+    alert_voltage_reset_flag : bool
+        Voltage-reset alert flag (read-only).
 
     Methods
     -------
@@ -297,33 +297,6 @@ class MAX17048:
     @comparator_disabled.setter
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
-
-    @property
-    def voltage_reset_alert(self) -> bool:
-        """
-        Voltage reset flag.
-
-        Indicates whether the cell voltage dropped below and subsequently
-        risen above the :py:attr:`alert_voltage_reset_threshold` threshold.
-
-        Returns
-        -------
-        bool
-            ``True`` if the cell voltage dropped below and then rose above the
-            configured reset threshold, ``False`` otherwise.
-
-        Notes
-        -----
-        Corresponds to the ``VR`` bit in the ``STATUS`` register. This
-        property is read-only. Use :py:meth:`alert_voltage_reset_flag_clear`
-        to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_reset_threshold`
-        :py:meth:`alert_voltage_reset_flag_clear`
-        """
-        return bool(self._vr)
 
     @property
     def active_alert(self) -> bool:
@@ -923,6 +896,33 @@ class MAX17048:
             raise ValueError("Reset voltage must be between 0 and 5.1V")
         self._vreset = int(vreset / 0.04)  # 40 mV steps
 
+    @property
+    def alert_voltage_reset_flag(self) -> bool:
+        """
+        Voltage reset flag.
+
+        Indicates whether the cell voltage dropped below and subsequently
+        risen above the :py:attr:`alert_voltage_reset_threshold` threshold.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cell voltage dropped below and then rose above the
+            configured reset threshold, ``False`` otherwise.
+
+        Notes
+        -----
+        Corresponds to the ``VR`` bit in the ``STATUS`` register. This
+        property is read-only. Use :py:meth:`alert_voltage_reset_flag_clear`
+        to clear the flag after handling the alert.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:meth:`alert_voltage_reset_flag_clear`
+        """
+        return bool(self._vr)
+
     def alert_voltage_reset_flag_clear(self) -> None:
         """
         Clear the voltage reset flag.
@@ -931,6 +931,6 @@ class MAX17048:
 
         See Also
         --------
-        :py:attr:`voltage_reset_alert`
+        :py:attr:`alert_voltage_reset_flag`
         """
         self._vr = 0

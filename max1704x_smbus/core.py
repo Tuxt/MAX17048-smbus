@@ -57,15 +57,8 @@ class MAX17048:
         Current cell voltage in volts (read-only).
     cell_percent : float
         State-of-charge (SOC) as a percentage (read-only).
-    hibernating : bool
-        ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
     chip_version : int
         Raw chip version register (read-only).
-    hibernation_threshold : float
-        Threshold (in %/hour) below which the device may enter hibernation
-        (read-write).
-    activity_threshold : float
-        Voltage change threshold to exit hibernation mode (read-write).
     rcomp : int
         RCOMP configuration to tune compensation for different battery types
         (read-write).
@@ -75,6 +68,12 @@ class MAX17048:
         Disable the analog comparator while in hibernation (read-write).
     chip_id : int
         Chip ID register (read-only).
+    hibernating : bool
+        ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
+    activity_threshold : float
+        Voltage change threshold to exit hibernation mode (read-write).
+    hibernation_threshold : float
+        Threshold (in %/hour) below which the device may enter hibernation (read-write).
     sleep_enable : bool
         Enable or disable the device sleep mode (read/write).
     sleep_switch : bool
@@ -312,6 +311,9 @@ class MAX17048:
         """
         self._quick_start = 1
 
+    #####################
+    # API - HIBERNATION #
+    #####################
     @property
     def hibernating(self) -> bool:
         """

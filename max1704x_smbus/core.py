@@ -138,7 +138,7 @@ class MAX17048:
     # [0x04] SOC        RO
     _cell_soc = RORegister(_MAX1704X_SOC_REG, used_bytes=USED_BYTES_BOTH)
     # [0x06] MODE       WO  Default: 0x0000
-    _hibernating = ROBit(_MAX1704X_MODE_REG, bit=4)
+    _hibstat = ROBit(_MAX1704X_MODE_REG, bit=4)
     _ensleep = RWBit(_MAX1704X_MODE_REG, bit=5)
     _quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
     # [0x08] VERSION    RO  Default: 0x001_
@@ -339,7 +339,7 @@ class MAX17048:
         :py:meth:`hibernate`
         :py:meth:`wake`
         """
-        return bool(self._hibernating)
+        return bool(self._hibstat)
 
     @property
     def activity_threshold(self) -> float:

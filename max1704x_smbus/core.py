@@ -53,21 +53,21 @@ class MAX17048:
 
     Attributes
     ----------
+    chip_version : int
+        Raw chip version register (read-only).
+    chip_id : int
+        Chip ID register (read-only).
     cell_voltage : float
         Current cell voltage in volts (read-only).
     cell_percent : float
         State-of-charge (SOC) as a percentage (read-only).
-    chip_version : int
-        Raw chip version register (read-only).
+    charge_rate : float
+        Estimated charge/discharge rate in percent per hour (read-only).
     rcomp : int
         RCOMP configuration to tune compensation for different battery types
         (read-write).
-    charge_rate : float
-        Estimated charge/discharge rate in percent per hour (read-only).
     comparator_disabled : bool
         Disable the analog comparator while in hibernation (read-write).
-    chip_id : int
-        Chip ID register (read-only).
     hibernating : bool
         ``1`` when the device is currently in hibernation, ``0`` otherwise. (read-only).
     activity_threshold : float
@@ -231,6 +231,21 @@ class MAX17048:
         except OSError as e:
             raise RuntimeError("Clearing reset alert did not succeed") from e
 
+    def quick_start(self) -> None:
+        """
+        Trigger a quick-start estimation of OCV and SOC.
+
+        Initiates a recalculation of open-circuit voltage (OCV) and
+        state-of-charge (SOC) based on the instantaneous cell voltage.
+
+        Notes
+        -----
+        This method sets the ``Quick-Start`` bit in the ``MODE`` register to
+        trigger a recalculation. Use with caution; see the *Quick-Start* section
+        of the datasheet for details.
+        """
+        self._quick_start = 1
+
     @property
     def cell_voltage(self) -> float:
         """
@@ -295,21 +310,6 @@ class MAX17048:
     @comparator_disabled.setter
     def comparator_disabled(self, disabled: bool) -> None:
         self._comparator_disabled = int(disabled)
-
-    def quick_start(self) -> None:
-        """
-        Trigger a quick-start estimation of OCV and SOC.
-
-        Initiates a recalculation of open-circuit voltage (OCV) and
-        state-of-charge (SOC) based on the instantaneous cell voltage.
-
-        Notes
-        -----
-        This method sets the ``Quick-Start`` bit in the ``MODE`` register to
-        trigger a recalculation. Use with caution; see the *Quick-Start* section
-        of the datasheet for details.
-        """
-        self._quick_start = 1
 
     #####################
     # API - HIBERNATION #

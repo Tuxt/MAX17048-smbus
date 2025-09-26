@@ -39,9 +39,7 @@ ALERTFLAG_VOLTAGE_HIGH = 0x02
 ALERTFLAG_RESET_INDICATOR = 0x01
 
 
-# TODO: Reorder attributes and methods by functional groups
 # TODO: Add See Also sections to group related hibernation and alert properties
-# TODO: Review/Rename attribute/property naming for consistency
 class MAX17048:
     """
     Interface for the MAX17048 fuel gauge.

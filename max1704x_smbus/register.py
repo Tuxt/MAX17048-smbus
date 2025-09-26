@@ -207,6 +207,8 @@ class RegisterField:
         ------
         :py:exc:`AttributeError`
             If attempting to write to a read-only register field.
+        :py:exc:`OverflowError`
+            If attempting to write a value outside the valid logical bounds.
         """
         if self.read_only:
             raise AttributeError("Cannot write to read-only register field")

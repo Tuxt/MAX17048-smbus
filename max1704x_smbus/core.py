@@ -138,9 +138,9 @@ class MAX17048:
     # [0x04] SOC        RO
     _cell_soc = RORegister(_MAX1704X_SOC_REG, used_bytes=USED_BYTES_BOTH)
     # [0x06] MODE       WO  Default: 0x0000
-    _hibstat = ROBit(_MAX1704X_MODE_REG, bit=4)
-    _ensleep = RWBit(_MAX1704X_MODE_REG, bit=5)
-    _quick_start = RWBit(_MAX1704X_MODE_REG, bit=6)
+    _hibstat = ROBit(_MAX1704X_MODE_REG, bit=12)
+    _ensleep = RWBit(_MAX1704X_MODE_REG, bit=13)
+    _quick_start = RWBit(_MAX1704X_MODE_REG, bit=14)
     # [0x08] VERSION    RO  Default: 0x001_
     chip_version = RORegister(_MAX1704X_VERSION_REG, used_bytes=USED_BYTES_BOTH)
     # [0x0A] HIBRT      RW  Default: 0x8030

@@ -470,6 +470,10 @@ class MAX17048:
         -----
         Corresponds to the ``EnSleep`` bit in the ``MODE`` register
         (read/write).
+
+        See Also
+        --------
+        :py:attr:`sleep_switch`
         """
         return bool(self._ensleep)
 
@@ -495,6 +499,10 @@ class MAX17048:
         Notes
         -----
         Corresponds to the ``SLEEP`` bit in the ``CONFIG`` register.
+
+        See Also
+        --------
+        :py:attr:`sleep_enable`
         """
         return bool(self._sleep)
 

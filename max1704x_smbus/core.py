@@ -326,16 +326,18 @@ class MAX17048:
         bool
             ``True`` if the device is in hibernation, ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`activity_threshold`
+        :py:attr:`hibernation_threshold`
+        :py:meth:`hibernate`
+        :py:meth:`wake`
+
         Notes
         -----
         Corresponds to the ``HibStat`` bit in the ``MODE`` register.
         This property is read-only. Use :py:meth:`hibernate` or :py:meth:`wake`
         to change the device state.
-
-        See Also
-        --------
-        :py:meth:`hibernate`
-        :py:meth:`wake`
         """
         return bool(self._hibstat)
 
@@ -360,7 +362,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`hibernating`
-        :py:meth:`hibernation_threshold`
+        :py:attr:`hibernation_threshold`
         :py:meth:`hibernate`
         :py:meth:`wake`
         """
@@ -394,7 +396,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`hibernating`
-        :py:meth:`activity_threshold`
+        :py:attr:`activity_threshold`
         :py:meth:`hibernate`
         :py:meth:`wake`
         """
@@ -417,9 +419,9 @@ class MAX17048:
         See Also
         --------
         :py:attr:`hibernating`
+        :py:attr:`activity_threshold`
+        :py:attr:`hibernation_threshold`
         :py:meth:`wake`
-        :py:meth:`activity_threshold`
-        :py:meth:`hibernation_threshold`
 
         Notes
         -----
@@ -440,9 +442,9 @@ class MAX17048:
         See Also
         --------
         :py:attr:`hibernating`
+        :py:attr:`activity_threshold`
+        :py:attr:`hibernation_threshold`
         :py:meth:`hibernate`
-        :py:meth:`activity_threshold`
-        :py:meth:`hibernation_threshold`
 
         Notes
         -----

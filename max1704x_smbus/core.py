@@ -468,14 +468,14 @@ class MAX17048:
         bool
             ``True`` if sleep mode is enabled, ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`sleep_switch`
+
         Notes
         -----
         Corresponds to the ``EnSleep`` bit in the ``MODE`` register
         (read/write).
-
-        See Also
-        --------
-        :py:attr:`sleep_switch`
         """
         return bool(self._ensleep)
 
@@ -498,13 +498,13 @@ class MAX17048:
             ``True`` if forcing the device into sleep mode, ``False`` if
             forcing exit.
 
-        Notes
-        -----
-        Corresponds to the ``SLEEP`` bit in the ``CONFIG`` register.
-
         See Also
         --------
         :py:attr:`sleep_enable`
+
+        Notes
+        -----
+        Corresponds to the ``SLEEP`` bit in the ``CONFIG`` register.
         """
         return bool(self._sleep)
 

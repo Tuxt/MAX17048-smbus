@@ -526,6 +526,10 @@ class MAX17048:
         bool
             ``True`` if an alert is active, ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_reason`
+        :py:meth:`alert_global_flag_clear`
         """
         return bool(self._alrt)
 
@@ -536,6 +540,10 @@ class MAX17048:
         This operation resets the alert status in the configuration register and
         simultaneously releases the physical ``ALRT`` pin, until a new alert
         condition is triggered.
+
+        See Also
+        --------
+        :py:attr:`alert_global_flag`
         """
         self._alrt = 0
 
@@ -559,6 +567,13 @@ class MAX17048:
         :py:const:`ALERTFLAG_VOLTAGE_LOW`
         :py:const:`ALERTFLAG_VOLTAGE_HIGH`
         :py:const:`ALERTFLAG_RESET_INDICATOR`
+        :py:attr:`alert_global_flag`
+        :py:attr:`alert_soc_change_flag`
+        :py:attr:`alert_soc_low_flag`
+        :py:attr:`alert_voltage_high_flag`
+        :py:attr:`alert_voltage_low_flag`
+        :py:attr:`alert_voltage_reset_flag`
+        :py:attr:`alert_reset_indicator_flag`
         """
         return self._status & 0x3F
 
@@ -575,6 +590,11 @@ class MAX17048:
         -------
         bool
             ``True`` if the SOC change alert is enabled, ``False`` otherwise.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_change_flag`
+        :py:meth:`alert_soc_change_flag_clear`
         """
         return bool(self._alsc)
 
@@ -595,16 +615,17 @@ class MAX17048:
             ``True`` if SOC changed at least 1%,
             ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_soc_change_enable`
+        :py:meth:`alert_soc_change_flag_clear`
+        :py:attr:`alert_reason`
+
         Notes
         -----
         Corresponds to the ``SC`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_soc_change_flag_clear`
         to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_soc_change_enable`
-        :py:meth:`alert_soc_change_flag_clear`
         """
         return bool(self._sc)
 
@@ -617,6 +638,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`alert_soc_change_flag`
+        :py:attr:`alert_soc_change_enable`
         """
         self._sc = 0
 
@@ -638,6 +660,11 @@ class MAX17048:
         ------
         :py:exc:`ValueError`
             If a value outside the valid range is assigned.
+
+        See Also
+        --------
+        :py:attr:`alert_soc_low_flag`
+        :py:meth:`alert_soc_low_flag_clear`
         """
         return 32 - self._athd
 
@@ -660,16 +687,17 @@ class MAX17048:
             ``True`` if SOC crossed the configured threshold,
             ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_soc_low_threshold`
+        :py:meth:`alert_soc_low_flag_clear`
+        :py:attr:`alert_reason`
+
         Notes
         -----
         Corresponds to the ``HD`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_soc_low_flag_clear`
         to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_soc_low_threshold`
-        :py:meth:`alert_soc_low_flag_clear`
         """
         return bool(self._hd)
 
@@ -682,6 +710,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`alert_soc_low_flag`
+        :py:attr:`alert_soc_low_threshold`
         """
         self._hd = 0
 
@@ -701,6 +730,11 @@ class MAX17048:
         ------
         :py:exc:`ValueError`
             If a value outside the valid range is assigned.
+        
+        See Also
+        --------
+        :py:attr:`alert_voltage_high_flag`
+        :py:meth:`alert_voltage_high_flag_clear`
         """
         return self._valrt_max * 0.02  # 20 mV steps
 
@@ -724,16 +758,17 @@ class MAX17048:
             ``True`` if the cell voltage has exceeded the threshold,
             ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_voltage_high_threshold`
+        :py:meth:`alert_voltage_high_flag_clear`
+        :py:attr:`alert_reason`
+
         Notes
         -----
         Corresponds to the ``VH`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_voltage_high_flag_clear` to
         clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_high_threshold`
-        :py:meth:`alert_voltage_high_flag_clear`
         """
         return bool(self._vh)
 
@@ -746,6 +781,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`alert_voltage_high_flag`
+        :py:attr:`alert_voltage_high_threshold`
         """
         self._vh = 0
 
@@ -764,6 +800,11 @@ class MAX17048:
         ------
         :py:exc:`ValueError`
             If a value outside the valid range is assigned.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_low_flag`
+        :py:meth:`alert_voltage_low_flag_clear`
         """
         return self._valrt_min * 0.02  # 20 mV steps
 
@@ -787,16 +828,17 @@ class MAX17048:
             ``True`` if the cell voltage has fallen below the threshold,
             ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_voltage_low_threshold`
+        :py:meth:`alert_voltage_low_flag_clear`
+        :py:attr:`alert_reason`
+
         Notes
         -----
         Corresponds to the ``VL`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_voltage_low_flag_clear` to
         clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_low_threshold`
-        :py:meth:`alert_voltage_low_flag_clear`
         """
         return bool(self._vl)
 
@@ -809,6 +851,7 @@ class MAX17048:
         See Also
         --------
         :py:attr:`alert_voltage_low_flag`
+        :py:attr:`alert_voltage_low_threshold`
         """
         self._vl = 0
 
@@ -823,15 +866,16 @@ class MAX17048:
         bool
             ``True`` if voltage reset alert is enabled, ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:attr:`alert_voltage_reset_flag`
+        :py:meth:`alert_voltage_reset_flag_clear`
+
         Notes
         -----
         Corresponds to the ``EnVr`` bit in the ``STATUS`` register
         (read/write).
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_reset_threshold`
-        :py:meth:`alert_voltage_reset_flag_clear`
         """
         return bool(self._envr)
 
@@ -856,6 +900,12 @@ class MAX17048:
         ------
         :py:exc:`ValueError`
             If a value outside the valid range is assigned.
+
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_enable`
+        :py:attr:`alert_voltage_reset_flag`
+        :py:meth:`alert_voltage_reset_flag_clear`
         """
         return self._vreset * 0.04  # 40 mV steps
 
@@ -879,16 +929,18 @@ class MAX17048:
             ``True`` if the cell voltage dropped below and then rose above the
             configured reset threshold, ``False`` otherwise.
 
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_enable`
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:meth:`alert_voltage_reset_flag_clear`
+        :py:attr:`alert_reason`
+
         Notes
         -----
         Corresponds to the ``VR`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_voltage_reset_flag_clear`
         to clear the flag after handling the alert.
-
-        See Also
-        --------
-        :py:attr:`alert_voltage_reset_threshold`
-        :py:meth:`alert_voltage_reset_flag_clear`
         """
         return bool(self._vr)
 
@@ -901,6 +953,8 @@ class MAX17048:
         See Also
         --------
         :py:attr:`alert_voltage_reset_flag`
+        :py:attr:`alert_voltage_reset_enable`
+        :py:attr:`alert_voltage_reset_threshold`
         """
         self._vr = 0
 
@@ -921,15 +975,16 @@ class MAX17048:
             ``True`` if the reset indicator (RI) flag is set,
             ``False`` otherwise.
 
+        See Also
+        --------
+        :py:meth:`alert_reset_indicator_flag_clear`
+        :py:attr:`alert_reason`
+
         Notes
         -----
         Corresponds to the ``RI`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_reset_indicator_flag_clear` to
         acknowledge and clear the flag.
-
-        See Also
-        --------
-        :py:meth:`alert_reset_indicator_flag_clear`
         """
         return bool(self._ri)
 
@@ -940,13 +995,13 @@ class MAX17048:
         Acknowledges that the device has been configured after a reset or
         power-up event by clearing the ``RI`` bit in the ``STATUS`` register.
 
+        See Also
+        --------
+        :py:attr:`alert_reset_indicator_flag`
+
         Notes
         -----
         This method explicitly writes ``0`` to the ``RI`` flag. The bit is
         set automatically by the device after power-up or reset.
-
-        See Also
-        --------
-        :py:attr:`alert_reset_indicator_flag`
         """
         self._ri = 0

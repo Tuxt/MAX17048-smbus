@@ -236,6 +236,12 @@ class MAX17048:
         Initiates a recalculation of open-circuit voltage (OCV) and
         state-of-charge (SOC) based on the instantaneous cell voltage.
 
+        See Also
+        --------
+        :py:attr:`cell_voltage`
+        :py:attr:`cell_percent`
+        :py:attr:`charge_rate`
+
         Notes
         -----
         This method sets the ``Quick-Start`` bit in the ``MODE`` register to
@@ -253,6 +259,12 @@ class MAX17048:
         -------
         float
             Cell voltage in volts.
+
+        See Also
+        --------
+        :py:attr:`cell_percent`
+        :py:attr:`charge_rate`
+        :py:meth:`quick_start`
         """
         return self._cell_voltage * 78.125 / 1_000_000
 
@@ -265,6 +277,12 @@ class MAX17048:
         -------
         float
             State of charge as a percentage of full capacity (0-100).
+
+        See Also
+        --------
+        :py:attr:`cell_voltage`
+        :py:attr:`charge_rate`
+        :py:meth:`quick_start`
         """
         return self._cell_soc / 256.0
 
@@ -278,6 +296,12 @@ class MAX17048:
         float
             Rate of change in percent per hour. Positive values indicate charging,
             negative values indicate discharging.
+
+        See Also
+        --------
+        :py:attr:`cell_voltage`
+        :py:attr:`cell_percent`
+        :py:meth:`quick_start`
         """
         return self._cell_crate * 0.208
 

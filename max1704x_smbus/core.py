@@ -297,6 +297,12 @@ class MAX17048:
             ``True`` if the comparator is disabled in hibernate mode,
             ``False`` if enabled.
 
+        See Also
+        --------
+        :py:attr:`alert_voltage_reset_threshold`
+        :py:attr:`hibernating`
+        :py:attr:`hibernation_threshold`
+
         Notes
         -----
         Corresponds to the ``Dis`` bit in the ``VRESET/ID`` register.
@@ -332,6 +338,7 @@ class MAX17048:
         :py:attr:`hibernation_threshold`
         :py:meth:`hibernate`
         :py:meth:`wake`
+        :py:attr:`comparator_disabled`
 
         Notes
         -----
@@ -399,6 +406,7 @@ class MAX17048:
         :py:attr:`activity_threshold`
         :py:meth:`hibernate`
         :py:meth:`wake`
+        :py:attr:`comparator_disabled`
         """
         return self._hibrt_hibthr * 0.208  # 0.208%/hr steps
 
@@ -906,6 +914,7 @@ class MAX17048:
         :py:attr:`alert_voltage_reset_enable`
         :py:attr:`alert_voltage_reset_flag`
         :py:meth:`alert_voltage_reset_flag_clear`
+        :py:attr:`comparator_disabled`
         """
         return self._vreset * 0.04  # 40 mV steps
 

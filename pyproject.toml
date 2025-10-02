@@ -8,7 +8,8 @@ version = "0.1.0"
 description = "MAX17048/49 battery fuel gauge driver using SMBus"
 readme = "README.md"
 requires-python = ">=3.8,<4"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = [
   "MAX17048",
   "MAX17049",
@@ -27,7 +28,6 @@ authors = [
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3",
@@ -97,9 +97,10 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 docstring-code-format = true
 
+[tool.setuptools]
+py-modules = ["max1704x_smbus"]

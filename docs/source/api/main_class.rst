@@ -9,5 +9,6 @@ MAX17048/MAX17049 fuel gauge devices. It contains the primary class
 :py:class:`MAX17048` and several useful constants.
 
 
-.. autoclass:: max1704x_smbus.core.MAX17048
+.. autodocstringclass:: max1704x_smbus.core.MAX17048
    :members:
+   :no-docstring-members: @repeated

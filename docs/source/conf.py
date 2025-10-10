@@ -25,6 +25,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx_autodoc_typehints",
+    "docs.source.ext.autodoc_docstringclass",
 ]
 
 templates_path = ["_templates"]

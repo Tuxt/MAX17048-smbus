@@ -20,4 +20,4 @@ The library is lightweight and has no external dependencies beyond the I²C comm
    :maxdepth: 1
    :caption: API Reference
 
-   api/main_class
+   api/core_module

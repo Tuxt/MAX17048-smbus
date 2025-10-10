@@ -74,7 +74,7 @@ class MAX17048:
     sleep_enable : bool
         Enable or disable the device sleep mode (read/write).
     sleep_switch : bool
-        Forces the IC in or out of sleep mode (if `sleep_enable`) (read-write)
+        Forces the IC in or out of sleep mode (if :py:attr:`sleep_enable`) (read-write)
     alert_reason : int
         Bitmask of currently active alert causes (read-only).
     alert_global_flag : bool
@@ -347,8 +347,7 @@ class MAX17048:
         Whether the device is currently in hibernation.
 
         Read the device hibernation status. Returns ``True`` when the hardware
-        reports it is in hibernation mode (the bit named ``HibStat`` in the
-        device datasheet).
+        reports it is in hibernation mode.
 
         Returns
         -------
@@ -586,7 +585,7 @@ class MAX17048:
         Returns
         -------
         int
-            Mask of alert flasgs. Multiple causes may be set simultaneously.
+            Mask of alert flags. Multiple causes may be set simultaneously.
             Individual causes can be checked against the module constants
             (e.g. ``ALERTFLAG_SOC_LOW``).
 

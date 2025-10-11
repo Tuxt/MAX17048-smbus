@@ -11,7 +11,10 @@ MAX17048/MAX17049 fuel gauge devices. It contains the primary class
 
 .. autodocstringclass:: max1704x_smbus.core.MAX17048
    :members:
+   :special-members: __init__
    :no-docstring-members: @repeated
+   :undoc-members:
+   :member-order: alphabetical
 
 
 Module constants

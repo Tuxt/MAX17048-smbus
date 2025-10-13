@@ -109,7 +109,8 @@ class DocstringClassDocumenter(ClassDocumenter):
         individual members lack their own docstrings.
         """
         if hasattr(self.env, "temp_items"):
-            return doc
+            # temp_items already set: no need to save it again, but need to consume/delete info sections
+            return self._filter_all(doc)
         item = ""
         docstring = ""
         items = {}
@@ -127,6 +128,7 @@ class DocstringClassDocumenter(ClassDocumenter):
                         item = ""
                         docstring = ""
                     item = line.split(" ")[0]
+        self.env.temp_items = items
         return doc
 
 
@@ -135,7 +137,6 @@ def patch_member_docstrings(app, what, name, obj, options, lines):
         return
     item_name = name.split(".")[-1]
     if item_name in app.env.temp_items:
-        app.env.temp_items[item_name]
         lines.clear()
         lines.append(app.env.temp_items[item_name])
 

@@ -112,6 +112,7 @@ class DocstringClassDocumenter(ClassDocumenter):
             # temp_items already set: no need to save it again, but need to consume/delete info sections
             return self._filter_all(doc)
         item = ""
+        item_type = ""
         docstring = ""
         items = {}
         for section in ("Attributes", "Methods"):
@@ -124,10 +125,12 @@ class DocstringClassDocumenter(ClassDocumenter):
                     docstring += line.strip()
                 else:
                     if item and docstring:
-                        items[item] = docstring
+                        items[item] = (item_type, docstring)
                         item = ""
+                        item_type = ""
                         docstring = ""
-                    item = line.split(" ")[0]
+                    splitted = line.split(" ")
+                    item, item_type = splitted[0], splitted[-1] if len(splitted) > 1 else ""
         self.env.temp_items = items
         return doc
 
@@ -137,8 +140,9 @@ def patch_member_docstrings(app, what, name, obj, options, lines):
         return
     item_name = name.split(".")[-1]
     if item_name in app.env.temp_items:
+        item_type, docstring = app.env.temp_items[item_name]
         lines.clear()
-        lines.append(app.env.temp_items[item_name])
+        lines.extend([docstring, "", f":type: {item_type}"])
 
 
 def setup(app):

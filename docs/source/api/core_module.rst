@@ -11,7 +11,10 @@ MAX17048/MAX17049 fuel gauge devices. It contains the primary class
 
 .. autodocstringclass:: max1704x_smbus.core.MAX17048
    :members:
+   :special-members: __init__
    :no-docstring-members: @repeated
+   :undoc-members:
+   :member-order: alphabetical
 
 
 Module constants
@@ -19,19 +22,13 @@ Module constants
 
 .. autodata:: max1704x_smbus.core.ALERTFLAG_SOC_CHANGE
    :annotation: =0x20
-   :no-index:
 .. autodata:: max1704x_smbus.core.ALERTFLAG_SOC_LOW
    :annotation: =0x10
-   :no-index:
 .. autodata:: max1704x_smbus.core.ALERTFLAG_VOLTAGE_RESET
    :annotation: =0x08
-   :no-index:
 .. autodata:: max1704x_smbus.core.ALERTFLAG_VOLTAGE_LOW
    :annotation: =0x04
-   :no-index:
 .. autodata:: max1704x_smbus.core.ALERTFLAG_VOLTAGE_HIGH
    :annotation: =0x02
-   :no-index:
 .. autodata:: max1704x_smbus.core.ALERTFLAG_RESET_INDICATOR
    :annotation: =0x01
-   :no-index:

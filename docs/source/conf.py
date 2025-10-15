@@ -42,7 +42,6 @@ napoleon_use_rtype = True
 # Autodoc settings
 autosummary_generate = True
 autodoc_member_order = "bysource"
-autodoc_typehints = "description"
 
 
 # -- Options for HTML output -------------------------------------------------

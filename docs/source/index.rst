@@ -21,3 +21,10 @@ The library is lightweight and has no external dependencies beyond the I²C comm
    :caption: API Reference
 
    api/core_module
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Internals
+
+   api/internals/index

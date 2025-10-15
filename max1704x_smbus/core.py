@@ -747,7 +747,6 @@ class MAX17048:
     # Voltage High
     @property
     def alert_voltage_high_threshold(self) -> float:
-        """The upper-limit voltage for the voltage alert."""
         """
         Maximum voltage threshold for triggering a voltage alert.
 

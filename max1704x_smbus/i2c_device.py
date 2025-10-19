@@ -1,7 +1,7 @@
 """
 I²C device communication interface.
 
-This module provides the ``I2CDevice`` class, which abstracts the underlying
+This module provides the :py:class:`I2CDevice` class, which abstracts the underlying
 I²C backend to offer a consistent interface for reading from and writing to
 a device at a given bus and address. It is intended both for direct low-level
 transactions and as a base for higher-level device drivers.

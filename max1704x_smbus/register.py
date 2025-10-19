@@ -249,8 +249,8 @@ class RegisterField:
         num_bits : int
             Number of valid bits in the value (bit width).
         unsigned_to_signed : bool, optional
-            If True (default), interprets the unsigned input as signed.
-            If False, converts a signed input to its unsigned representation.
+            If ``True`` (default), interprets the unsigned input as signed.
+            If ``False``, converts a signed input to its unsigned representation.
 
         Returns
         -------
@@ -284,6 +284,7 @@ def RWRegister(  # noqa: N802
         The register address to read from or write to.
     used_bytes : int
         Which byte(s) of the register to access:
+
         - ``USED_BYTES_MSB``  (-1): Use only the most significant byte (first byte)
         - ``USED_BYTES_BOTH`` (0):  Use both bytes (the full 16-bit register).
         - ``USED_BYTES_LSB``  (1):  Use only the least significant byte (second byte).
@@ -332,6 +333,7 @@ def RORegister(  # noqa: N802
         The register address to read from.
     used_bytes : int
         Which byte(s) of the register to access:
+
         - ``USED_BYTES_MSB``  (-1): Use only the most significant byte (first byte)
         - ``USED_BYTES_BOTH`` (0):  Use both bytes (the full 16-bit register).
         - ``USED_BYTES_LSB``  (1):  Use only the least significant byte (second byte).
@@ -387,11 +389,11 @@ def RWBit(register_address: int, bit: int, independent_bytes: bool = False) -> R
     Returns
     -------
     RegisterField
-        A new ``RegisterField`` instance.
+        A new :py:class:`RegisterField` instance.
 
     See Also
     --------
-    :class:`RegisterField`
+    :py:class:`RegisterField`
 
     Notes
     -----

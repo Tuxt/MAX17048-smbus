@@ -560,6 +560,15 @@ class MAX17048:
         --------
         :py:attr:`alert_reason`
         :py:meth:`alert_global_flag_clear`
+
+        Notes
+        -----
+        This flag has automatic behavior:
+
+        - **Auto-set**: Automatically becomes ``True`` when any individual alert is triggered
+        - **Auto-clear**: Automatically becomes ``False`` when all individual alert flags are cleared
+
+        The :py:attr:`alert_reset_indicator_flag` does not affect this global flag status.
         """
         return bool(self._alrt)
 
@@ -569,11 +578,18 @@ class MAX17048:
 
         This operation resets the alert status in the configuration register and
         simultaneously releases the physical ``ALRT`` pin, until a new alert
-        condition is triggered.
+        condition is triggered. As a side effect, all individual alert flags
+        are also cleared simultaneously.
 
         See Also
         --------
         :py:attr:`alert_global_flag`
+
+        Notes
+        -----
+        The :py:attr:`alert_reset_indicator_flag` is NOT cleared by this method,
+        as it is not a true alert but a device status indicator. To clear it,
+        use :py:meth:`alert_reset_indicator_flag_clear` instead.
         """
         self._alrt = 0
 
@@ -747,7 +763,6 @@ class MAX17048:
     # Voltage High
     @property
     def alert_voltage_high_threshold(self) -> float:
-        """The upper-limit voltage for the voltage alert."""
         """
         Maximum voltage threshold for triggering a voltage alert.
 
@@ -1016,6 +1031,9 @@ class MAX17048:
         Corresponds to the ``RI`` bit in the ``STATUS`` register. This
         property is read-only. Use :py:meth:`alert_reset_indicator_flag_clear` to
         acknowledge and clear the flag.
+
+        This flag is independent of :py:attr:`alert_global_flag` and is not
+        automatically cleared when clearing the global alert flag.
         """
         return bool(self._ri)
 

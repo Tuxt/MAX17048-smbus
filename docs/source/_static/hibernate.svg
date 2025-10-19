@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generado por Microsoft Visio, SVG Export hibernate.svg Página-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="4.32603in" height="4.12918in"
+		viewBox="0 0 311.474 297.301" xml:space="preserve" color-interpolation-filters="sRGB" class="st15">
+	<v:documentProperties v:langID="3082" v:metric="true" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {visibility:visible}
+		.st2 {fill:#a5a5a5;fill-opacity:0.6;filter:url(#filter_2);stroke:#a5a5a5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6}
+		.st3 {fill:url(#ptrn15-9);shape-rendering:crispEdges;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6;stroke-width:0.75}
+		.st4 {fill:url(#ptrn15-16);shape-rendering:crispEdges;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6;stroke-width:0.75}
+		.st5 {fill:#000000;font-family:Franklin Gothic Book;font-size:1.00001em;font-weight:bold}
+		.st6 {fill:url(#ptrn15-25);shape-rendering:crispEdges;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6;stroke-width:0.75}
+		.st7 {fill:#000000;font-family:Inconsolata;font-size:0.833336em}
+		.st8 {fill:url(#ptrn15-33);shape-rendering:crispEdges;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6;stroke-width:0.75}
+		.st9 {fill:#ffffff;font-family:Franklin Gothic Book;font-size:0.833336em}
+		.st10 {fill:#ffffff;font-family:Franklin Gothic Book;font-size:0.499992em}
+		.st11 {fill:url(#ptrn15-172);shape-rendering:crispEdges;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6;stroke-width:0.75}
+		.st12 {fill:url(#ptrn15-180);shape-rendering:crispEdges;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.6;stroke-width:0.75}
+		.st13 {fill:#ffffff;font-family:Franklin Gothic Book;font-size:1.00001em}
+		.st14 {stroke:#757575;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5}
+		.st15 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Patterns_And_Gradients">
+		<pattern id="ptrn15-9" v:fillPattern="15" v:foreground="#b59caf" v:background="#b095aa" patternUnits="userSpaceOnUse"
+				width="6" height="6" viewBox="0 0 64 64">
+			<image x="0" y="0" width="64" height="64" image-rendering="optimizeSpeed"
+					xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAoSURBVChTY9g6Z/1/EN4wdRUYo/MZsAki88EK8CkCW4FP0cC7Yf1/AK4HvaGC52WwAAAAAElFTkSuQmCC"/>
+		</pattern>
+		<pattern id="ptrn15-16" v:fillPattern="15" v:foreground="#ffffff" v:background="#f9f9f9" patternUnits="userSpaceOnUse"
+				width="6" height="6" viewBox="0 0 64 64">
+			<image x="0" y="0" width="64" height="64" image-rendering="optimizeSpeed"
+					xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAmSURBVChTY/gPBT9//gRjGIDxGbAJwgBcAT5FYCvwKRp4N/z/DwBahvzBsxBZSgAAAABJRU5ErkJggg=="/>
+		</pattern>
+		<pattern id="ptrn15-25" v:fillPattern="15" v:foreground="#e6dee4" v:background="#e1d7df" patternUnits="userSpaceOnUse"
+				width="6" height="6" viewBox="0 0 64 64">
+			<image x="0" y="0" width="64" height="64" image-rendering="optimizeSpeed"
+					xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAoSURBVChTY3h278l/EH54/T4Yo/MZsAki88EK8CkCW4FP0cC74cl/AGtR56GbxTL1AAAAAElFTkSuQmCC"/>
+		</pattern>
+		<pattern id="ptrn15-33" v:fillPattern="15" v:foreground="#60485a" v:background="#5b4456" patternUnits="userSpaceOnUse"
+				width="6" height="6" viewBox="0 0 64 64">
+			<image x="0" y="0" width="64" height="64" image-rendering="optimizeSpeed"
+					xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAnSURBVChTY0jwiPoPwtEuYWCMzmfAJojMByvApwhsBT5FA++GqP8AEId+oUjqL3cAAAAASUVORK5CYII="/>
+		</pattern>
+		<pattern id="ptrn15-172" v:fillPattern="15" v:foreground="#e1e7d9" v:background="#dbe2d1" patternUnits="userSpaceOnUse"
+				width="6" height="6" viewBox="0 0 64 64">
+			<image x="0" y="0" width="64" height="64" image-rendering="optimizeSpeed"
+					xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAoSURBVChTY3j4/OZ/EL796CIYo/MZsAki88EK8CkCW4FP0cC74eZ/AGQC5aG4V5SsAAAAAElFTkSuQmCC"/>
+		</pattern>
+		<pattern id="ptrn15-180" v:fillPattern="15" v:foreground="#4e603b" v:background="#4a5a38" patternUnits="userSpaceOnUse"
+				width="6" height="6" viewBox="0 0 64 64">
+			<image x="0" y="0" width="64" height="64" image-rendering="optimizeSpeed"
+					xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAnSURBVChTY/BLsP4Pwl5RFmCMzmfAJojMByvApwhsBT5FA+8G6/8A12t4YUx7JqcAAAAASUVORK5CYII="/>
+		</pattern>
+	</defs>
+	<defs id="Filters">
+		<filter id="filter_2">
+			<feGaussianBlur stdDeviation="2"/>
+		</filter>
+	</defs>
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>Página-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Conector" v:index="0"/>
+		<g id="group700-1" transform="translate(3.375,-111.676)" v:mID="700" v:groupContext="group">
+			<title>Hoja.700</title>
+			<g id="group701-2" v:mID="701" v:groupContext="group">
+				<title>Hoja.701</title>
+				<g id="shape702-3" v:mID="702" v:groupContext="shape">
+					<title>Hoja.702</title>
+					<g id="shadow702-4" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="113.049" width="304.724" height="184.252" class="st2"/>
+					</g>
+					<rect x="0" y="113.049" width="304.724" height="184.252" class="st3"/>
+				</g>
+				<g id="shape703-10" v:mID="703" v:groupContext="shape" transform="translate(7.08658,-134.646)">
+					<title>Hoja.703</title>
+					<desc>HIBERNATE MODE</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="145.276" cy="276.041" width="290.56" height="42.5197"/>
+					<g id="shadow703-11" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="254.782" width="290.551" height="42.5197" class="st2"/>
+					</g>
+					<rect x="0" y="254.782" width="290.551" height="42.5197" class="st4"/>
+					<text x="98.62" y="279.64" class="st5" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>HIBERNATE MODE</text>				</g>
+			</g>
+			<g id="group704-18" transform="translate(7.08659,-92.126)" v:mID="704" v:groupContext="group">
+				<title>Hoja.704</title>
+				<g id="shape705-19" v:mID="705" v:groupContext="shape">
+					<title>Hoja.705</title>
+					<desc>hibernating</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="70.8662" cy="279.585" width="141.74" height="35.4331"/>
+					<g id="shadow705-20" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="261.868" width="141.732" height="35.4331" class="st2"/>
+					</g>
+					<rect x="0" y="261.868" width="141.732" height="35.4331" class="st6"/>
+					<text x="43.37" y="282.58" class="st7" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>hibernating</text>				</g>
+				<g id="shape706-27" v:mID="706" v:groupContext="shape" transform="translate(113.386,-24.7475)">
+					<title>Hoja.706</title>
+					<desc>RO</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="14.1732" cy="291.958" width="28.35" height="10.6856"/>
+					<g id="shadow706-28" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,1.42109E-14,2.00157)" class="st1">
+						<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st2"/>
+					</g>
+					<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st8"/>
+					<text x="7.95" y="294.96" class="st9" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>RO</text>				</g>
+				<g id="shape707-35" v:mID="707" v:groupContext="shape" transform="translate(99.2126,0)">
+					<title>Hoja.707</title>
+					<desc>Flag</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="21.2599" cy="293.828" width="42.52" height="6.94561"/>
+					<g id="shadow707-36" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st2"/>
+					</g>
+					<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st8"/>
+					<text x="15.99" y="295.63" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>Flag</text>				</g>
+				<g id="shape708-42" v:mID="708" v:groupContext="shape" transform="translate(0,-26.9575)">
+					<title>Hoja.708</title>
+					<desc>MODE.HibStat (0x06)</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="31.1811" cy="293.063" width="62.37" height="8.47558"/>
+					<g id="shadow708-43" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="288.826" width="62.3622" height="8.47558" class="st2"/>
+					</g>
+					<rect x="0" y="288.826" width="62.3622" height="8.47558" class="st8"/>
+					<text x="4.1" y="294.86" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>MODE.HibStat (0x06)</text>				</g>
+			</g>
+			<g id="group709-49" transform="translate(7.08659,-49.6063)" v:mID="709" v:groupContext="group">
+				<title>Hoja.709</title>
+				<g id="shape710-50" v:mID="710" v:groupContext="shape">
+					<title>Hoja.710</title>
+					<desc>activity_threshold</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="70.8662" cy="279.585" width="141.74" height="35.4331"/>
+					<g id="shadow710-51" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="261.868" width="141.732" height="35.4331" class="st2"/>
+					</g>
+					<rect x="0" y="261.868" width="141.732" height="35.4331" class="st6"/>
+					<text x="25.86" y="282.58" class="st7" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>activity_threshold</text>				</g>
+				<g id="shape711-57" v:mID="711" v:groupContext="shape" transform="translate(113.386,-24.7475)">
+					<title>Hoja.711</title>
+					<desc>RW</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="14.1732" cy="291.958" width="28.35" height="10.6856"/>
+					<g id="shadow711-58" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st2"/>
+					</g>
+					<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st8"/>
+					<text x="7.02" y="294.96" class="st9" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>RW</text>				</g>
+				<g id="shape712-64" v:mID="712" v:groupContext="shape" transform="translate(99.2126,0)">
+					<title>Hoja.712</title>
+					<desc>Threshold</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="21.2599" cy="293.828" width="42.52" height="6.94561"/>
+					<g id="shadow712-65" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st2"/>
+					</g>
+					<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st8"/>
+					<text x="8.76" y="295.63" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>Threshold</text>				</g>
+				<g id="shape713-71" v:mID="713" v:groupContext="shape" transform="translate(0,-26.2205)">
+					<title>Hoja.713</title>
+					<desc>HIBRT.ActThr (0x0A)</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="31.1811" cy="292.695" width="62.37" height="9.21258"/>
+					<g id="shadow713-72" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="288.089" width="62.3622" height="9.21258" class="st2"/>
+					</g>
+					<rect x="0" y="288.089" width="62.3622" height="9.21258" class="st8"/>
+					<text x="5.75" y="294.5" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>HIBRT.ActThr (0x0A)</text>				</g>
+			</g>
+			<g id="group714-78" transform="translate(7.08659,-7.08664)" v:mID="714" v:groupContext="group">
+				<title>Hoja.714</title>
+				<g id="shape715-79" v:mID="715" v:groupContext="shape">
+					<title>Hoja.715</title>
+					<desc>hibernation_threshold</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="70.8662" cy="279.585" width="141.74" height="35.4331"/>
+					<g id="shadow715-80" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="261.868" width="141.732" height="35.4331" class="st2"/>
+					</g>
+					<rect x="0" y="261.868" width="141.732" height="35.4331" class="st6"/>
+					<text x="18.36" y="282.58" class="st7" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>hibernation_threshold</text>				</g>
+				<g id="shape716-86" v:mID="716" v:groupContext="shape" transform="translate(113.386,-24.7475)">
+					<title>Hoja.716</title>
+					<desc>RW</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="14.1732" cy="291.958" width="28.35" height="10.6856"/>
+					<g id="shadow716-87" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st2"/>
+					</g>
+					<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st8"/>
+					<text x="7.02" y="294.96" class="st9" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>RW</text>				</g>
+				<g id="shape717-93" v:mID="717" v:groupContext="shape" transform="translate(99.2126,0)">
+					<title>Hoja.717</title>
+					<desc>Threshold</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="21.2599" cy="293.828" width="42.52" height="6.94561"/>
+					<g id="shadow717-94" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st2"/>
+					</g>
+					<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st8"/>
+					<text x="8.76" y="295.63" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>Threshold</text>				</g>
+				<g id="shape718-100" v:mID="718" v:groupContext="shape" transform="translate(0,-26.2205)">
+					<title>Hoja.718</title>
+					<desc>HIBRT.HibThr (0x0A)</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="31.1811" cy="292.695" width="62.37" height="9.21258"/>
+					<g id="shadow718-101" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="288.089" width="62.3622" height="9.21258" class="st2"/>
+					</g>
+					<rect x="0" y="288.089" width="62.3622" height="9.21258" class="st8"/>
+					<text x="5.45" y="294.5" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>HIBRT.HibThr (0x0A)</text>				</g>
+			</g>
+			<g id="group719-107" transform="translate(155.905,-92.126)" v:mID="719" v:groupContext="group">
+				<title>Hoja.719</title>
+				<g id="shape720-108" v:mID="720" v:groupContext="shape">
+					<title>Hoja.720</title>
+					<desc>hibernate()</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="70.8662" cy="279.585" width="141.74" height="35.4331"/>
+					<g id="shadow720-109" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="261.868" width="141.732" height="35.4331" class="st2"/>
+					</g>
+					<rect x="0" y="261.868" width="141.732" height="35.4331" class="st6"/>
+					<text x="43.37" y="282.58" class="st7" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>hibernate()</text>				</g>
+				<g id="shape721-115" v:mID="721" v:groupContext="shape" transform="translate(113.386,-24.7475)">
+					<title>Hoja.721</title>
+					<desc>WO</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="14.1732" cy="291.958" width="28.35" height="10.6856"/>
+					<g id="shadow721-116" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st2"/>
+					</g>
+					<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st8"/>
+					<text x="6.93" y="294.96" class="st9" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>WO</text>				</g>
+				<g id="shape722-122" v:mID="722" v:groupContext="shape" transform="translate(87.874,0)">
+					<title>Hoja.722</title>
+					<desc>Trigger Threshold</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="26.9292" cy="293.828" width="53.86" height="6.94561"/>
+					<g id="shadow722-123" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="290.356" width="53.8583" height="6.94561" class="st2"/>
+					</g>
+					<rect x="0" y="290.356" width="53.8583" height="6.94561" class="st8"/>
+					<text x="5.05" y="295.63" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>Trigger Threshold</text>				</g>
+				<g id="shape723-129" v:mID="723" v:groupContext="shape" transform="translate(0,-26.9291)">
+					<title>Hoja.723</title>
+					<desc>HIBRT (0x0A)</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="31.1811" cy="293.049" width="62.37" height="8.50399"/>
+					<g id="shadow723-130" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="288.797" width="62.3622" height="8.50399" class="st2"/>
+					</g>
+					<rect x="0" y="288.797" width="62.3622" height="8.50399" class="st8"/>
+					<text x="14.49" y="294.85" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>HIBRT (0x0A)</text>				</g>
+			</g>
+			<g id="group724-136" transform="translate(155.905,-49.6063)" v:mID="724" v:groupContext="group">
+				<title>Hoja.724</title>
+				<g id="shape725-137" v:mID="725" v:groupContext="shape">
+					<title>Hoja.725</title>
+					<desc>wake()</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="70.8662" cy="279.585" width="141.74" height="35.4331"/>
+					<g id="shadow725-138" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="261.868" width="141.732" height="35.4331" class="st2"/>
+					</g>
+					<rect x="0" y="261.868" width="141.732" height="35.4331" class="st6"/>
+					<text x="55.87" y="282.58" class="st7" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>wake()</text>				</g>
+				<g id="shape726-144" v:mID="726" v:groupContext="shape" transform="translate(113.386,-24.7475)">
+					<title>Hoja.726</title>
+					<desc>WO</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="14.1732" cy="291.958" width="28.35" height="10.6856"/>
+					<g id="shadow726-145" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st2"/>
+					</g>
+					<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st8"/>
+					<text x="6.93" y="294.96" class="st9" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>WO</text>				</g>
+				<g id="shape727-151" v:mID="727" v:groupContext="shape" transform="translate(87.874,0)">
+					<title>Hoja.727</title>
+					<desc>Trigger Threshold</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="26.9292" cy="293.828" width="53.86" height="6.94561"/>
+					<g id="shadow727-152" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,-2.84217E-14,2.00157)" class="st1">
+						<rect x="0" y="290.356" width="53.8583" height="6.94561" class="st2"/>
+					</g>
+					<rect x="0" y="290.356" width="53.8583" height="6.94561" class="st8"/>
+					<text x="5.05" y="295.63" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>Trigger Threshold</text>				</g>
+				<g id="shape728-158" v:mID="728" v:groupContext="shape" transform="translate(0,-26.3622)">
+					<title>Hoja.728</title>
+					<desc>HIBRT (0x0A)</desc>
+					<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+					<v:textRect cx="31.1811" cy="292.766" width="62.37" height="9.07091"/>
+					<g id="shadow728-159" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+							v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+						<rect x="0" y="288.23" width="62.3622" height="9.07091" class="st2"/>
+					</g>
+					<rect x="0" y="288.23" width="62.3622" height="9.07091" class="st8"/>
+					<text x="14.49" y="294.57" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>HIBRT (0x0A)</text>				</g>
+			</g>
+		</g>
+		<g id="group827-165" transform="translate(91.9576,-5.37663)" v:mID="827" v:groupContext="group">
+			<title>Hoja.827</title>
+			<g id="shape828-166" v:mID="828" v:groupContext="shape">
+				<title>Hoja.828</title>
+				<desc>comparator_disabled</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="70.8662" cy="279.585" width="141.74" height="35.4331"/>
+				<g id="shadow828-167" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+						v:shadowType="1" transform="matrix(1,0,0,1,-1.42109E-14,2.00157)" class="st1">
+					<rect x="0" y="261.868" width="141.732" height="35.4331" class="st2"/>
+				</g>
+				<rect x="0" y="261.868" width="141.732" height="35.4331" class="st11"/>
+				<text x="23.36" y="282.58" class="st7" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>comparator_disabled</text>			</g>
+			<g id="shape829-174" v:mID="829" v:groupContext="shape" transform="translate(113.386,-24.7475)">
+				<title>Hoja.829</title>
+				<desc>RW</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="14.1732" cy="291.958" width="28.35" height="10.6856"/>
+				<g id="shadow829-175" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+						v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+					<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st2"/>
+				</g>
+				<rect x="0" y="286.616" width="28.3465" height="10.6856" class="st12"/>
+				<text x="5.59" y="295.56" class="st13" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>RW</text>			</g>
+			<g id="shape830-182" v:mID="830" v:groupContext="shape" transform="translate(99.2126,0)">
+				<title>Hoja.830</title>
+				<desc>Enable</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="21.2599" cy="293.828" width="42.52" height="6.94561"/>
+				<g id="shadow830-183" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+						v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+					<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st2"/>
+				</g>
+				<rect x="0" y="290.356" width="42.5197" height="6.94561" class="st12"/>
+				<text x="12.54" y="295.63" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>Enable</text>			</g>
+			<g id="shape831-189" v:mID="831" v:groupContext="shape" transform="translate(0,-26.2205)">
+				<title>Hoja.831</title>
+				<desc>VRESET.Dis (0x18)</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="31.1811" cy="292.695" width="62.37" height="9.21258"/>
+				<g id="shadow831-190" v:groupContext="shadow" v:shadowOffsetX="1.22561E-16" v:shadowOffsetY="-2.00157"
+						v:shadowType="1" transform="matrix(1,0,0,1,0,2.00157)" class="st1">
+					<rect x="0" y="288.089" width="62.3622" height="9.21258" class="st2"/>
+				</g>
+				<rect x="0" y="288.089" width="62.3622" height="9.21258" class="st12"/>
+				<text x="7.45" y="294.5" class="st10" v:langID="3082"><v:paragraph v:horizAlign="1"/><v:tabList/>VRESET.Dis (0x18)</text>			</g>
+		</g>
+		<g id="shape833-196" v:mID="833" v:groupContext="shape" v:layerMember="0" transform="translate(155.737,-111.676)">
+			<title>Conector dinámico</title>
+			<path d="M7.09 297.3 L7.09 368.17" class="st14"/>
+		</g>
+	</g>
+</svg>

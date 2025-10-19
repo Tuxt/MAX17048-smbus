@@ -15,6 +15,7 @@ The library is lightweight and has no external dependencies beyond the I²C comm
 
    install
    usage
+   api_overview
 
 .. toctree::
    :maxdepth: 1

@@ -164,7 +164,7 @@ class RegisterField:
         bit_limit = 1 << num_bits
         self._bounds = (-bit_limit // 2, bit_limit // 2) if signed else (0, bit_limit)
 
-    def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int:
+    def __get__(self, obj: I2CDeviceDriver, objtype: Optional[Type[I2CDeviceDriver]] = None) -> int | None:
         """
         Read the current field value from the register.
 
@@ -180,6 +180,9 @@ class RegisterField:
         int
             Value of the field extracted from the register.
         """
+        if obj is None:
+            return None
+
         data = obj.i2c_device.read(self.address, self.size)
 
         # Join bytes (if 2 bytes): Unsigned

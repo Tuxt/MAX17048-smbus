@@ -31,7 +31,7 @@ _MAX1704X_VRESET_ID_REG = 0x18
 _MAX1704X_STATUS_REG = 0x1A
 _MAX1704X_CMD_REG = 0xFE
 
-ALERTFLAG_SOC_CHANGE = 0x20 #:
+ALERTFLAG_SOC_CHANGE = 0x20  #:
 ALERTFLAG_SOC_LOW = 0x10  #:
 ALERTFLAG_VOLTAGE_RESET = 0x08  #:
 ALERTFLAG_VOLTAGE_LOW = 0x04  #:
@@ -139,12 +139,12 @@ class MAX17048:
     _ensleep = RWBit(_MAX1704X_MODE_REG, bit=13)
     _quick_start = RWBit(_MAX1704X_MODE_REG, bit=14)
     # [0x08] VERSION    RO  Default: 0x001_
-    chip_version = RORegister(_MAX1704X_VERSION_REG, used_bytes=USED_BYTES_BOTH)
+    _chip_version = RORegister(_MAX1704X_VERSION_REG, used_bytes=USED_BYTES_BOTH)
     # [0x0A] HIBRT      RW  Default: 0x8030
     _hibrt_actthr = RWRegister(_MAX1704X_HIBRT_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     _hibrt_hibthr = RWRegister(_MAX1704X_HIBRT_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
     # [0x0C] CONFIG     RW  Default: 0x971C
-    rcomp = RWRegister(_MAX1704X_CONFIG_REG, used_bytes=USED_BYTES_MSB)
+    _rcomp = RWRegister(_MAX1704X_CONFIG_REG, used_bytes=USED_BYTES_MSB)
     _sleep = RWBit(_MAX1704X_CONFIG_REG, bit=7)
     _alsc = RWBit(_MAX1704X_CONFIG_REG, bit=6)
     _alrt = RWBit(_MAX1704X_CONFIG_REG, bit=5)
@@ -157,7 +157,7 @@ class MAX17048:
     # [0x18] VRESET/ID  RW  Default: 0x96__
     _vreset = RegisterField(_MAX1704X_VRESET_ID_REG, num_bits=7, lowest_bit=9, independent_bytes=True)
     _comparator_disabled = RWBit(_MAX1704X_VRESET_ID_REG, bit=8, independent_bytes=True)
-    chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
+    _chip_id = RORegister(_MAX1704X_VRESET_ID_REG, used_bytes=USED_BYTES_LSB, independent_bytes=True)
     # [0x1A] STATUS     RW  Default: 0x01__
     _status = RORegister(_MAX1704X_STATUS_REG, used_bytes=USED_BYTES_MSB, independent_bytes=True)
     _ri = RWBit(_MAX1704X_STATUS_REG, bit=8, independent_bytes=True)
@@ -303,6 +303,49 @@ class MAX17048:
         :py:meth:`quick_start`
         """
         return self._cell_crate * 0.208
+
+    @property
+    def chip_version(self) -> int:
+        """
+        Production version of the device.
+
+        Returns
+        -------
+        int
+            Chip version value.
+        """
+        return self._chip_version
+
+    @property
+    def chip_id(self) -> int:
+        """
+        Unique identifier of the device.
+
+        Returns
+        -------
+        int
+            Chip ID value.
+        """
+        return self._chip_id
+
+    @property
+    def rcomp(self) -> int:
+        """
+        Temperature compensation value.
+
+        Used to optimize accuracy for different lithium chemistries
+        or operating temperature ranges.
+
+        Returns
+        -------
+        int
+            Chip ID value.
+        """
+        return self._rcomp
+
+    @rcomp.setter
+    def rcomp(self, value: int) -> None:
+        self._rcomp = value
 
     @property
     def comparator_disabled(self) -> bool:
@@ -770,12 +813,12 @@ class MAX17048:
         -------
         float
             Upper-limit threshold in volts, between 0 and 5.1 V.
-        
+
         Raises
         ------
         :py:exc:`ValueError`
             If a value outside the valid range is assigned.
-        
+
         See Also
         --------
         :py:attr:`alert_voltage_high_flag`

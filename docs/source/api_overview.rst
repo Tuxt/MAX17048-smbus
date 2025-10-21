@@ -300,6 +300,7 @@ Activated when powered up or reset, indicating the device still requires configu
 
 
 .. _analog-comparator:
+
 Analog Comparator
 =================
 

@@ -12,7 +12,6 @@ Internals (for developers)
 
 .. toctree::
    :maxdepth: 1
-   :caption: I2C Device
 
    i2c_device
    register

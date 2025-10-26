@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "MAX17048-smbus"
-version = "0.1.0"
+dynamic = ["version"]
 description = "MAX17048/49 battery fuel gauge driver using SMBus"
 readme = "README.md"
 requires-python = ">=3.8,<4"
@@ -104,3 +104,6 @@ docstring-code-format = true
 
 [tool.setuptools]
 py-modules = ["max1704x_smbus"]
+
+[tool.setuptools.dynamic]
+version = { attr = "max1704x_smbus.__version__" }

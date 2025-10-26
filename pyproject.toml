@@ -103,7 +103,7 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.setuptools]
-py-modules = ["max1704x_smbus"]
+packages = ["max1704x_smbus"]
 
 [tool.setuptools.dynamic]
 version = { attr = "max1704x_smbus.__version__" }

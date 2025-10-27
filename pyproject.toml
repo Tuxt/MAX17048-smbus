@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "MAX17048-smbus"
-dynamic = ["version"]
+version = "0.1.0"
 description = "MAX17048/49 battery fuel gauge driver using SMBus"
 readme = "README.md"
 requires-python = ">=3.8,<4"
@@ -46,6 +46,7 @@ Issues = "https://github.com/Tuxt/MAX17048-smbus/issues"
 dev = [
   "ruff>=0.12.7",
   "pytest>=8.4.1",
+  "bumpver==2025.1131",
 ]
 smbus = ["smbus"]
 smbus2 = ["smbus2"]
@@ -105,5 +106,22 @@ docstring-code-format = true
 [tool.setuptools]
 packages = ["max1704x_smbus"]
 
-[tool.setuptools.dynamic]
-version = { attr = "max1704x_smbus.__version__" }
+[tool.bumpver]
+current_version = "0.1.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "chore(release): bump version {old_version} -> {new_version}"
+tag_message = "v{new_version}"
+tag_scope = "default"
+pre_commit_hook = ""
+post_commit_hook = ""
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+    'version = "{version}"',
+]
+"max1704x_smbus/__init__.py" = ['__version__ = "{version}"']
+

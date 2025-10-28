@@ -41,6 +41,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/Tuxt/MAX17048-smbus"
 Repository = "https://github.com/Tuxt/MAX17048-smbus"
+Documentation = "https://max17048-smbus.readthedocs.io"
 Issues = "https://github.com/Tuxt/MAX17048-smbus/issues"
 
 [project.optional-dependencies]

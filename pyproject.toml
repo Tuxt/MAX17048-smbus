@@ -49,6 +49,7 @@ dev = [
   "ruff>=0.12.7",
   "pytest>=8.4.1",
   "bumpver==2025.1131",
+  "twine==6.2.0",
 ]
 smbus = ["smbus"]
 smbus2 = ["smbus2"]

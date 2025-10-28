@@ -1,65 +1,63 @@
 # MAX17048-smbus
 
-MAX17048/49 battery fuel gauge library using SMBus.
+A lightweight Python library for communicating with **MAX17048** (and likely compatible **MAX17049**) battery fuel gauge sensors over the **I²C/SMBus** interface.
 
-## Description
+This package provides a simple and dependency-minimal interface designed for environments like **Raspberry Pi** or other Linux-based systems with native SMBus support.
 
-This library provides a Python interface to communicate with MAX17048/MAX17049 battery fuel gauge through SMBus/I²C. Specifically designed for Raspberry Pi and other Linux systems that support SMBus.
+## Overview
+
+`MAX17048-smbus` provides a straightforward and lightweight way to communicate with the MAX17048/MAX17049 battery fuel gauge sensors over SMBus/I²C.
+It is especially suited for Raspberry Pi and other Linux systems with native SMBus support.
+
+This library is designed to work **directly with standard SMBus backends** (`smbus`, `smbus2`, or `smbus3`), automatically selecting the first available one.
+
+It aims to remain **minimal**, **easy to integrate**, and **dependency-minimal** across typical Linux environments, making it ideal for embedded systems like **Raspberry Pi**, **Orange Pi**, or other Linux-based boards.
 
 ## Features
 
-- Battery State of Charge (SoC) reading
-- Battery voltage measurement
-- Raspberry Pi compatible
+- Read battery **State of Charge (SoC)**, **voltage**, and **charge/discharge rate**  
+- Access **alert status** and configure **alert thresholds**
+- Control **sleep** and **hibernation** modes
+- Read and reset **configuration registers**
+- Support for **MAX17048** (and likely compatible **MAX17049**) devices
+- Works with `smbus`, `smbus2`, or `smbus3` backends (auto-detected)
+- Designed for **Raspberry Pi** and other **Linux-based** systems
+- **No external dependencies** beyond the SMBus backend
 
 ## Installation
 
-### Overview
+### Basic installation
 
-This library requires one of several I²C backend libraries to communicate with hardware: `smbus`, `smbus2`, or `smbus3`. You can [install the library without a bankend](#install-the-library) if you already have one installed, [install a backend separately](#ic-backend-installation), or [install the library along with a backend](#install-with-an-optional-backend) in one step using optional dependencies.
-
-### Install the library
-
-To install the library without any backends (if you already have a backend installed or plan to install one manually):
+Install the library directly from PyPI:
 
 ```bash
-pip install git+https://github.com/Tuxt/MAX17048-smbus.git
+pip install MAX17048-smbus
+```
+This install only the core library, assuming you already have an SMBus-compatible backend available on your system (such as `smbus`, `smbus2`, or `smbus3`).
+
+On most **Raspberry Pi** systems, the `smbus` package is already available via APT:
+
+```bash
+sudo apt install python3-smbus
 ```
 
-#### I²C backend installation
+### With optional backend
 
-This library requires access to the I²C bus via one of the following compatible modules:
+If you don’t have any SMBus backend installed, you can install one together with the library:
 
-- [smbus3](https://pypi.org/project/smbus3/) — modern and actively maintained ([GitHub](https://github.com/eindiran/smbus3))
 ```bash
-pip install smbus3
-```
-
-- [smbus2](https://pypi.org/project/smbus2/) — stable and widely used ([GitHub](https://github.com/kplindegaard/smbus2))
-```bash
-pip install smbus2
-```
-
-- [smbus](https://pypi.org/project/smbus/) — basic I²C support, limited features, commonly pre-installed on Raspberry Pi.
-```bash
-apt install python3-smbus   # preferred
+pip install MAX17048-smbus[smbus3]
 # or
-pip install smbus
+pip install MAX17048-smbus[smbus2]
+# or
+pip install MAX17048-smbus[smbus]
 ```
 
-### Install with an optional backend
+Only one backend is needed — the library will automatically detect and use whichever is available.
 
-Alternatively, you can install the library along with a backend in one step:
+## Quick Example
 
-```bash
-pip install git+https://github.com/Tuxt/MAX17048-smbus.git[smbus3]
-# or
-pip install git+https://github.com/Tuxt/MAX17048-smbus.git[smbus2]
-# or
-pip install git+https://github.com/Tuxt/MAX17048-smbus.git[smbus]
-```
-
-## Basic Usage
+A minimal example showing how to read the battery state of charge and voltage:
 
 ```python
 from max1704x_smbus import MAX17048
@@ -67,21 +65,42 @@ from max1704x_smbus import MAX17048
 # Create device instance
 device = MAX17048()
 
-# Read battery state and voltage
-soc = device.state_of_charge  # %
-voltage = device.voltage      # V
+# Read battery information
+soc = device.cell_percent       # %
+voltage = device.cell_voltage   # V
+
+print(f"SoC: {soc:.2f}% | Voltage: {voltage:.3f} V")
 ```
+
+For more detailed usage examples, configuration options, and advanced features, see the [documentation on Read the Docs](https://max17048-smbus.readthedocs.io).
+
+## Documentation
+
+Comprehensive documentation is available online, including full API reference, configuration details, and usage examples:
+
+👉 [https://max17048-smbus.readthedocs.io](https://max17048-smbus.readthedocs.io)
 
 ## Requirements
 
-- Python ≥ 3.8
-- Linux OS with SMBus support
-- I²C/SMBus access (usually requires root permissions)
+- Python **3.8** or newer  
+- One of the following SMBus-compatible backends:
+  - `smbus` | `python3-smbus`
+  - `smbus2`
+  - `smbus3`
+- An I²C-capable system (e.g. Raspberry Pi, or any Linux board with `/dev/i2c-*` support)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
 
-> This library was inspired by [Adafruit_CircuitPython_MAX1704x](https://github.com/adafruit/Adafruit_CircuitPython_MAX1704x), but reimplemented from scratch to work with smbus/smbus2/smbus3 backends and without external dependencies.
+This library was inspired by [Adafruit_CircuitPython_MAX1704x](https://github.com/adafruit/Adafruit_CircuitPython_MAX1704x), but was reimplemented from scratch to work with smbus/smbus2/smbus3 backends without external dependencies.
+
+## Disclaimer
+
+This library was inspired by [Adafruit_CircuitPython_MAX1704x](https://github.com/adafruit/Adafruit_CircuitPython_MAX1704x) but was **written from scratch** and is **not API-compatible** with it.
+
+Support for the **MAX17049** device is **theoretical** — it has **not been tested**, though it is expected to work due to its register-level compatibility with the MAX17048.
+
+This software is provided **“as is”**, without warranty of any kind, express or implied.

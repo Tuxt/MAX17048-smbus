@@ -13,7 +13,6 @@ sys.path.insert(0, os.path.abspath("../.."))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "MAX1704X-smbus"
-copyright = "2025, Tuxt"
 author = "Tuxt"
 release = "0.1.0"
 
@@ -49,5 +48,10 @@ autodoc_member_order = "bysource"
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
+html_context = {
+    "copyright_year": "2026",
+    "copyright_author": "Tuxt",
+    "author_github": "https://github.com/Tuxt",
+}
 
 autodoc_mock_imports = ["smbus", "smbus2", "smbus3"]

@@ -1,8 +1,14 @@
 # MAX17048-smbus
 
+[![PyPI Version](https://img.shields.io/pypi/v/max17048-smbus)](https://pypi.org/project/MAX17048-smbus/)
+![PyPI Python Version](https://img.shields.io/pypi/pyversions/MAX17048-smbus)
+[![Documentation](https://app.readthedocs.org/projects/max17048-smbus/badge/?version=latest)](https://max17048-smbus.readthedocs.io)
+[![GitHub License](https://img.shields.io/github/license/Tuxt/MAX17048-smbus)](https://github.com/Tuxt/MAX17048-smbus/blob/main/LICENSE)
+
+
 A lightweight Python library for communicating with **MAX17048** (and likely compatible **MAX17049**) battery fuel gauge sensors over the **I²C/SMBus** interface.
 
-This package provides a simple and dependency-minimal interface designed for environments like **Raspberry Pi** or other Linux-based systems with native SMBus support.
+This package provides a simple and dependency-minimal interface designed for environments like **Raspberry Pi** or other Linux-based systems with native SMBus support. The official package is available on [PyPI](https://pypi.org/project/MAX17048-smbus/).
 
 ## Overview
 
@@ -28,7 +34,7 @@ It aims to remain **minimal**, **easy to integrate**, and **dependency-minimal**
 
 ### Basic installation
 
-Install the library directly from PyPI:
+Install the library directly from [PyPI](https://pypi.org/project/MAX17048-smbus/):
 
 ```bash
 pip install MAX17048-smbus

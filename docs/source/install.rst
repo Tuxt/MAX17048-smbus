@@ -2,7 +2,9 @@
 Installation
 ============
 
-You can install this library using pip:
+You can install this library directly from PyPI_ using pip:
+
+.. _PyPI: https://pypi.org/project/MAX17048-smbus
 
 .. code-block:: bash
 

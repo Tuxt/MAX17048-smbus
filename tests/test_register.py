@@ -1,6 +1,7 @@
 import re
 
 import pytest
+from max1704x_smbus.i2c_device import I2CDevice
 from max1704x_smbus.register import (
     USED_BYTES_BOTH,
     USED_BYTES_LSB,
@@ -276,24 +277,27 @@ incorrect_instantiation_cases = [
 
 
 @pytest.mark.parametrize("register_field, write_val, expected_bytes", correct_rw_cases)
-def test_rw(fake_bus, i2c_device, register_field, write_val, expected_bytes):
+def test_rw(register_field, write_val, expected_bytes):
+    i2c_device = I2CDevice(1, 0x36)
     driver = make_dummy(i2c_device, register_field)
     driver.register = write_val
-    assert fake_bus.memory[(0x36, driver.address)] == expected_bytes[0]
-    assert fake_bus.memory[(0x36, driver.address + 1)] == expected_bytes[1]
+    assert i2c_device.bus.memory[(0x36, driver.address)] == expected_bytes[0]
+    assert i2c_device.bus.memory[(0x36, driver.address + 1)] == expected_bytes[1]
     assert driver.register == write_val
 
 
 @pytest.mark.parametrize("register_field, write_val, error, message, expected_bytes", incorrect_write_cases)
-def test_incorrect_write(fake_bus, i2c_device, register_field, write_val, error, message, expected_bytes):
+def test_incorrect_write(register_field, write_val, error, message, expected_bytes):
+    i2c_device = I2CDevice(1, 0x36)
     driver = make_dummy(i2c_device, register_field)
     with pytest.raises(error, match=message):
         driver.register = write_val
-    assert fake_bus.memory[(0x36, driver.address)] == expected_bytes[0]
-    assert fake_bus.memory[(0x36, driver.address + 1)] == expected_bytes[1]
+    assert i2c_device.bus.memory[(0x36, driver.address)] == expected_bytes[0]
+    assert i2c_device.bus.memory[(0x36, driver.address + 1)] == expected_bytes[1]
 
 
 @pytest.mark.parametrize("register_class, kwargs, error, message", incorrect_instantiation_cases)
-def test_instanciation(fake_bus, i2c_device, register_class, kwargs, error, message):
+def test_instanciation(register_class, kwargs, error, message):
+    i2c_device = I2CDevice(1, 0x36)
     with pytest.raises(error, match=re.escape(message)):
         register_field = register_class(*kwargs)

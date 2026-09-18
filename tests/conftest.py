@@ -1,24 +1,11 @@
-import importlib.util
 import sys
 import types
-
-import pytest
-
-
-# Inject a fake smbus backend
-@pytest.fixture(autouse=True)
-def fake_smbus_backend(monkeypatch, fake_bus):
-    monkeypatch.setattr(importlib.util, "find_spec", lambda name: True if name == "smbus" else None)
-
-    # Inject a module called smbus on sys.modules
-    fake_mod = types.SimpleNamespace(SMBus=lambda busnum: fake_bus)
-    monkeypatch.setitem(sys.modules, "smbus", fake_mod)
 
 
 class FakeBus:
     """Simulate an ``SMBus`` using a dictionary as memory."""
 
-    def __init__(self):
+    def __init__(self, _busnum):
         self.memory = {
             (0x36, 0x00): 255,
             (0x36, 0x01): 255,
@@ -75,15 +62,14 @@ class FakeBus:
         pass
 
 
-@pytest.fixture
-def fake_bus():
-    return FakeBus()
+def pytest_configure():
+    # The SMBus backend is unavailable in the test environment and is resolved
+    # at import time. So a fixture would be applied too late.
+    # Yeah. It's a global patch
+    fake_loader = types.ModuleType("max1704x_smbus.smbus_loader")
+    fake_loader.SMBus = FakeBus
+    sys.modules["max1704x_smbus.smbus_loader"] = fake_loader
 
 
-# Prepare the I2CDevice so you don't have to repeat the code in each test
-@pytest.fixture
-def i2c_device(fake_bus, monkeypatch):
-    monkeypatch.setattr("max1704x_smbus.i2c_device.SMBus", lambda bus: fake_bus)
-    from max1704x_smbus.i2c_device import I2CDevice
-
-    return I2CDevice(1, 0x36)
+# If smbus_loader itself needs testing, isolate those tests in a separate
+# directory so this global patch does not apply to them.

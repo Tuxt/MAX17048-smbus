@@ -45,15 +45,23 @@ Documentation = "https://max17048-smbus.readthedocs.io"
 Issues = "https://github.com/Tuxt/MAX17048-smbus/issues"
 
 [project.optional-dependencies]
-dev = [
-  "ruff>=0.12.7",
-  "pytest>=8.4.1",
-  "bumpver==2025.1131",
-  "twine==6.2.0",
-]
 smbus = ["smbus"]
 smbus2 = ["smbus2"]
 smbus3 = ["smbus3"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16",
+    "pytest>=9.1.1",
+    "bumpver==2026.1132",
+    "twine==7.0.0",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinx-autodoc-typehints",
+]
+
+[tool.uv.dependency-groups]
+dev = { requires-python = ">=3.10" } 
 
 [tool.ruff]
 line-length = 120
